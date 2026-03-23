@@ -1,6 +1,6 @@
 # Forge
 
-Built by Shah Jacob with Codex (GPT-5.4).
+Built with Codex (GPT-5.4).
 
 Forge is a minimalist Chrome extension for pomodoro timing and session tracking.
 
