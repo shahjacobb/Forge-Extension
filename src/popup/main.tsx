@@ -113,7 +113,7 @@ const App = () => {
     <main className="shell">
       <section className="hero-panel">
         <div className="topbar">
-          <div>
+          <div className="brand-block">
             <div className="eyebrow">Forge</div>
             <div className="date-line">{currentDate}</div>
           </div>
