@@ -296,7 +296,7 @@ const App = () => {
             </div>
             <div className="clock">{formatClock(remainingMs)}</div>
             <div className="progress-bar-wrap">
-              <div className="progress-bar-fill" style={{ width: `${progressPct}%` }} />
+              <div className={`progress-bar-fill${isRunning ? " live" : ""}`} style={{ width: `${progressPct}%` }} />
             </div>
 
             <section className="control-section">
@@ -323,13 +323,15 @@ const App = () => {
               >
                 {primaryActionLabel}
               </button>
-            </section>
-
-            <section className="control-section secondary-section">
-              <div className="controls controls-secondary">
-                <button className="action" onClick={() => void act({ type: "start" })}>Restart</button>
-                <button className="action" onClick={() => void act({ type: "skip" })}>Skip</button>
-                <button className="action" onClick={() => void act({ type: "reset" })}>Reset</button>
+              <button
+                className="action-skip"
+                onClick={() => void act({ type: "skip" })}
+              >
+                {state.timer.mode === "focus" ? "Skip to break →" : "Skip to focus →"}
+              </button>
+              <div className="utility-row">
+                <button className="action-utility" onClick={() => void act({ type: "start" })}>Restart</button>
+                <button className="action-utility" onClick={() => void act({ type: "reset" })}>Reset</button>
               </div>
             </section>
 
