@@ -8,7 +8,7 @@ const sendMessage = <T,>(message: TimerCommand | { type: "getState" }): Promise<
   chrome.runtime.sendMessage(message) as Promise<T>;
 
 const formatClock = (remainingMs: number): string => {
-  const totalSeconds = Math.ceil(remainingMs / 1000);
+  const totalSeconds = Math.max(0, Math.floor(remainingMs / 1000));
   const minutes = Math.floor(totalSeconds / 60)
     .toString()
     .padStart(2, "0");
@@ -56,6 +56,7 @@ const App = () => {
 
   const act = async (command: TimerCommand) => {
     const nextState = await sendMessage<PersistedState>(command);
+    setNow(Date.now());
     setState(nextState);
   };
 
@@ -64,6 +65,7 @@ const App = () => {
       type: "setMode",
       payload: { mode, autoStart }
     });
+    setNow(Date.now());
     setState(nextState);
   };
 
@@ -86,56 +88,53 @@ const App = () => {
         </div>
         <div className="mode-row">
           <span className="mode-pill">{activeModeLabel}</span>
-          <span className="session-count">{state.timer.sessionCount} completed</span>
+          <span className="session-count">{focusToday} min today</span>
         </div>
         <div className="status-row">
           <span className={`status-dot${isRunning ? " live" : ""}`} />
           <span className="status-line">{isRunning ? "Session active" : "Ready to start"}</span>
         </div>
         <div className="clock">{formatClock(remainingMs)}</div>
-        <div className="mode-switcher">
-          <button
-            className={`mode-toggle${state.timer.mode === "focus" ? " selected" : ""}`}
-            onClick={() => void switchMode("focus")}
-          >
-            Focus
-          </button>
-          <button
-            className={`mode-toggle${state.timer.mode === "break" ? " selected" : ""}`}
-            onClick={() => void switchMode("break")}
-          >
-            Break
-          </button>
-          <button className="mode-launch" onClick={() => void switchMode(state.timer.mode, true)}>
-            Quick Start
-          </button>
-        </div>
+        <section className="control-section">
+          <div className="section-label">Mode</div>
+          <div className="mode-switcher">
+            <button
+              className={`mode-toggle${state.timer.mode === "focus" ? " selected" : ""}`}
+              onClick={() => void switchMode("focus")}
+            >
+              Focus
+            </button>
+            <button
+              className={`mode-toggle${state.timer.mode === "break" ? " selected" : ""}`}
+              onClick={() => void switchMode("break")}
+            >
+              Break
+            </button>
+            <button className="mode-launch" onClick={() => void switchMode(state.timer.mode, true)}>
+              Quick Start
+            </button>
+          </div>
+        </section>
 
-        <div className="stats-grid">
-          <article className="stat-card">
-            <span className="stat-label">Today</span>
-            <strong>{focusToday} min</strong>
-          </article>
-          <article className="stat-card">
-            <span className="stat-label">Focus</span>
-            <strong>{state.settings.focusMinutes} min</strong>
-          </article>
-          <article className="stat-card">
-            <span className="stat-label">Break</span>
-            <strong>{state.settings.breakMinutes} min</strong>
-          </article>
-        </div>
+        <section className="control-section">
+          <div className="section-label">Controls</div>
+          <div className="controls">
+            <button
+              className={`action${isRunning ? " danger" : ""}`}
+              onClick={() => void act({ type: isRunning ? "pause" : "start" })}
+            >
+              {isRunning ? "Pause" : state.timer.status === "paused" ? "Resume" : "Start"}
+            </button>
+            <button className="action primary" onClick={() => void act({ type: "start" })}>Restart</button>
+            <button className="action" onClick={() => void act({ type: "skip" })}>Skip</button>
+            <button className="action" onClick={() => void act({ type: "reset" })}>Reset</button>
+          </div>
+        </section>
 
-        <div className="controls">
-          <button
-            className={`action${isRunning ? " danger" : ""}`}
-            onClick={() => void act({ type: isRunning ? "pause" : "start" })}
-          >
-            {isRunning ? "Pause" : state.timer.status === "paused" ? "Resume" : "Start"}
-          </button>
-          <button className="action primary" onClick={() => void act({ type: "start" })}>Restart</button>
-          <button className="action" onClick={() => void act({ type: "skip" })}>Skip</button>
-          <button className="action" onClick={() => void act({ type: "reset" })}>Reset</button>
+        <div className="meta-strip">
+          <span>{state.settings.focusMinutes} min focus</span>
+          <span>{state.settings.breakMinutes} min break</span>
+          <span>{state.timer.sessionCount} completed</span>
         </div>
       </section>
     </main>

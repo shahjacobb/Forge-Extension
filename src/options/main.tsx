@@ -24,53 +24,55 @@ const App = () => {
 
   return (
     <main className="settings-shell">
-      <header>
-        <div className="eyebrow">Forge</div>
-        <h1>Cycle Settings</h1>
-        <p>Adjust your pomodoro timer and session tracking rules for this profile.</p>
-      </header>
+      <section className="settings-card">
+        <header>
+          <div className="eyebrow">Forge</div>
+          <h1>Settings</h1>
+          <p>Adjust timer lengths for this Chrome profile.</p>
+        </header>
 
-      <section className="settings-group">
-        <div className="settings-row">
-          <div className="settings-copy">
-            <span className="settings-label">Focus Session</span>
-            <p>Primary concentration block length.</p>
+        <section className="settings-group">
+          <div className="settings-row">
+            <div className="settings-copy">
+              <span className="settings-label">Focus Session</span>
+              <p>Primary concentration block.</p>
+            </div>
+            <input
+              className="settings-input"
+              type="number"
+              min={1}
+              value={state.settings.focusMinutes}
+              onChange={(event) => void update({ focusMinutes: Number(event.target.value) || 1 })}
+            />
           </div>
-          <input
-            className="settings-input"
-            type="number"
-            min={1}
-            value={state.settings.focusMinutes}
-            onChange={(event) => void update({ focusMinutes: Number(event.target.value) || 1 })}
-          />
-        </div>
 
-        <div className="settings-row">
-          <div className="settings-copy">
-            <span className="settings-label">Break Session</span>
-            <p>Recovery interval after each focus block.</p>
+          <div className="settings-row">
+            <div className="settings-copy">
+              <span className="settings-label">Break Session</span>
+              <p>Recovery block between focus rounds.</p>
+            </div>
+            <input
+              className="settings-input"
+              type="number"
+              min={1}
+              value={state.settings.breakMinutes}
+              onChange={(event) => void update({ breakMinutes: Number(event.target.value) || 1 })}
+            />
           </div>
-          <input
-            className="settings-input"
-            type="number"
-            min={1}
-            value={state.settings.breakMinutes}
-            onChange={(event) => void update({ breakMinutes: Number(event.target.value) || 1 })}
-          />
-        </div>
 
-        <div className="settings-row">
-          <div className="settings-copy">
-            <span className="settings-label">Auto Break</span>
-            <p>Launch break cycles automatically after focus completion.</p>
+          <div className="settings-row">
+            <div className="settings-copy">
+              <span className="settings-label">Auto Break</span>
+              <p>Start breaks automatically when focus ends.</p>
+            </div>
+            <input
+              className="settings-toggle"
+              type="checkbox"
+              checked={state.settings.autoStartBreaks}
+              onChange={(event) => void update({ autoStartBreaks: event.target.checked })}
+            />
           </div>
-          <input
-            className="settings-toggle"
-            type="checkbox"
-            checked={state.settings.autoStartBreaks}
-            onChange={(event) => void update({ autoStartBreaks: event.target.checked })}
-          />
-        </div>
+        </section>
       </section>
     </main>
   );

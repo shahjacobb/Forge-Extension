@@ -14,7 +14,7 @@
 body {
   margin: 0;
   min-width: 390px;
-  min-height: 560px;
+  min-height: 520px;
   background: transparent;
 }
 
@@ -24,11 +24,15 @@ input {
   font: inherit;
 }
 
+button,
+a {
+  cursor: pointer;
+}
+
 .shell {
   min-height: 100vh;
-  padding: 18px;
+  padding: 16px;
   display: grid;
-  gap: 16px;
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent 45%),
     radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.08), transparent 20%);
@@ -50,9 +54,9 @@ input {
 }
 
 .hero-panel {
-  padding: 20px;
+  padding: 18px;
   display: grid;
-  gap: 16px;
+  gap: 14px;
 }
 
 .eyebrow,
@@ -104,9 +108,9 @@ input {
 }
 
 .date-line {
-  margin-top: 6px;
+  margin-top: 4px;
   color: rgba(255, 255, 255, 0.7);
-  font-size: 0.92rem;
+  font-size: 0.88rem;
 }
 
 .mode-pill,
@@ -121,7 +125,7 @@ input {
 
 .clock {
   font-family: "IBM Plex Mono", "SFMono-Regular", monospace;
-  font-size: 4rem;
+  font-size: 3.85rem;
   line-height: 0.9;
   letter-spacing: -0.08em;
 }
@@ -143,6 +147,23 @@ input {
   box-shadow: 0 0 14px rgba(255, 77, 79, 0.85), 0 0 32px rgba(255, 77, 79, 0.28);
 }
 
+.mode-row {
+  margin-top: 2px;
+}
+
+.control-section {
+  display: grid;
+  gap: 8px;
+  padding-top: 2px;
+}
+
+.section-label {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.66rem;
+  color: rgba(255, 255, 255, 0.42);
+}
+
 .controls {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -157,22 +178,28 @@ input {
 .mode-toggle,
 .mode-launch {
   border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.035);
   color: #fafaf9;
   padding: 13px 14px;
   border-radius: 16px;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease;
 }
 
 .mode-toggle.selected {
   border-color: rgba(255, 255, 255, 0.24);
   background: rgba(255, 255, 255, 0.09);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
 .action {
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.04);
   color: #fafaf9;
-  padding: 14px 16px;
+  padding: 13px 16px;
   border-radius: 16px;
   transition:
     transform 180ms ease,
@@ -187,8 +214,9 @@ input {
 .mode-toggle:hover,
 .mode-launch:hover {
   transform: translateY(-1px);
-  border-color: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 0 24px rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 0 18px rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.075);
 }
 
 .primary {
@@ -202,20 +230,10 @@ input {
   color: #ffcccd;
 }
 
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.stat-card {
-  padding: 14px;
-  display: grid;
-  gap: 8px;
-}
-
-.stat-card strong {
-  font-size: 1.2rem;
+.danger:hover {
+  border-color: rgba(255, 110, 112, 0.38);
+  box-shadow: 0 0 0 1px rgba(255, 77, 79, 0.08), 0 0 18px rgba(255, 77, 79, 0.12);
+  background: rgba(255, 77, 79, 0.16);
 }
 
 .chart-panel {
@@ -238,12 +256,23 @@ input {
   min-height: 100vh;
   padding: 24px;
   display: grid;
-  gap: 18px;
-  max-width: 720px;
-  margin: 0 auto;
+  place-items: center;
 }
 
-.settings-shell h1,
+.settings-card {
+  width: min(100%, 520px);
+  display: grid;
+  gap: 16px;
+  padding: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  border-radius: 24px;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.35);
+}
+
+.settings-card h1,
+.settings-card p,
 .settings-shell p {
   margin: 0;
 }
@@ -254,23 +283,25 @@ input {
 }
 
 .settings-row {
-  padding: 16px;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.03);
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .settings-copy {
   display: grid;
-  gap: 6px;
+  gap: 4px;
 }
 
 .settings-copy p {
   color: rgba(255, 255, 255, 0.66);
+  font-size: 0.92rem;
 }
 
 .settings-input {
-  width: 110px;
+  width: 82px;
+  text-align: center;
   border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.04);
@@ -281,6 +312,32 @@ input {
 .settings-toggle {
   width: 22px;
   height: 22px;
+}
+
+.meta-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.84rem;
+  padding-top: 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.stat-card {
+  padding: 14px;
+  display: grid;
+  gap: 8px;
+}
+
+.stat-card strong {
+  font-size: 1.2rem;
 }
 
 .activity-shell {
