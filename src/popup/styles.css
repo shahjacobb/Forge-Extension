@@ -65,7 +65,7 @@ a {
   text-transform: uppercase;
   letter-spacing: 0.2em;
   font-size: 0.68rem;
-  color: rgba(255, 255, 255, 0.56);
+  color: rgba(255, 255, 255, 0.48);
 }
 
 .mode-row,
@@ -120,10 +120,10 @@ a {
 
 .date-line {
   margin-top: 6px;
-  color: rgba(255, 255, 255, 0.7);
+  color: #f7f7f5;
   font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
-  font-size: 1.18rem;
-  line-height: 1.05;
+  font-size: 1.4rem;
+  line-height: 0.98;
   letter-spacing: -0.03em;
 }
 
