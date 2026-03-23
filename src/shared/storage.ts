@@ -4,7 +4,7 @@ const STORAGE_KEY = "tempo-grid-state";
 const ALARM_NAME = "tempo-grid-alarm";
 const MAX_SESSIONS = 90;
 
-const defaultSettings: TimerSettings = {
+export const defaultSettings: TimerSettings = {
   focusMinutes: 25,
   breakMinutes: 5,
   autoStartBreaks: false

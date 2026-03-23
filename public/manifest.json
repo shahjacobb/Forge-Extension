@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "description": "Minimal pomodoro timer and session tracker with local progress insights.",
   "permissions": ["storage", "alarms", "notifications"],
+  "host_permissions": ["https://tiopzxojmnortiwbgfrx.supabase.co/*"],
   "background": {
     "service_worker": "background.js",
     "type": "module"

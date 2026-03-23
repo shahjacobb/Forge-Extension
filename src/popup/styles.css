@@ -366,6 +366,60 @@ a {
   gap: 10px;
 }
 
+.account-card {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.account-header h2 {
+  margin: 6px 0 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.account-body {
+  display: grid;
+  gap: 10px;
+}
+
+.account-field {
+  display: grid;
+  gap: 6px;
+}
+
+.account-input {
+  width: 100%;
+  text-align: left;
+}
+
+.account-meta {
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 0.9rem;
+}
+
+.account-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.account-notice,
+.account-error {
+  font-size: 0.88rem;
+}
+
+.account-notice {
+  color: rgba(215, 245, 224, 0.92);
+}
+
+.account-error {
+  color: rgba(255, 179, 179, 0.95);
+}
+
 .settings-row {
   padding: 12px 14px;
   border-radius: 14px;

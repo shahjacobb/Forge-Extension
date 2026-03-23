@@ -8,6 +8,7 @@
     "build": "tsc && vite build"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.99.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "recharts": "^2.15.1"

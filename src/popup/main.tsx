@@ -1,7 +1,19 @@
 import React from "react";
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import ReactDOM from "react-dom/client";
+import type { User } from "@supabase/supabase-js";
+import {
+  getAccountSnapshot,
+  signInWithEmail,
+  signOutAccount,
+  signUpWithEmail,
+  syncAccountState,
+  syncSessionsToAccount,
+  syncSettingsToAccount,
+  updateProfileName
+} from "../shared/account";
 import { buildWeeklyData, getWeekLabel } from "../shared/analytics";
+import { supabase } from "../shared/supabase";
 import type { PersistedState, TimerCommand, TimerMode, TimerSettings } from "../shared/types";
 import "./styles.css";
 
@@ -32,9 +44,27 @@ const App = () => {
   const [now, setNow] = React.useState(Date.now());
   const [view, setView] = React.useState<PopupView>("timer");
   const [settingsDraft, setSettingsDraft] = React.useState<TimerSettings | null>(null);
+  const [authUser, setAuthUser] = React.useState<User | null>(null);
+  const [profileName, setProfileName] = React.useState("");
+  const [authEmail, setAuthEmail] = React.useState("");
+  const [authPassword, setAuthPassword] = React.useState("");
+  const [authDisplayName, setAuthDisplayName] = React.useState("");
+  const [authBusy, setAuthBusy] = React.useState(false);
+  const [authError, setAuthError] = React.useState<string | null>(null);
+  const [authNotice, setAuthNotice] = React.useState<string | null>(null);
 
   const refresh = React.useCallback(async () => {
     const nextState = await sendMessage<PersistedState>({ type: "getState" });
+    const account = await getAccountSnapshot();
+    setAuthUser(account.user);
+    setProfileName(account.profile?.display_name ?? "");
+
+    if (account.user) {
+      const syncedState = await syncAccountState(account.user);
+      setState(syncedState);
+      return;
+    }
+
     setState(nextState);
   }, []);
 
@@ -49,6 +79,16 @@ const App = () => {
       setSettingsDraft(state.settings);
     }
   }, [state]);
+
+  React.useEffect(() => {
+    const {
+      data: { subscription }
+    } = supabase.auth.onAuthStateChange(() => {
+      void refresh();
+    });
+
+    return () => subscription.unsubscribe();
+  }, [refresh]);
 
   if (!state) {
     return <main className="shell loading">Loading control surface...</main>;
@@ -75,6 +115,10 @@ const App = () => {
     const nextState = await sendMessage<PersistedState>(command);
     setNow(Date.now());
     setState(nextState);
+
+    if (authUser && command.type === "skip") {
+      await syncSessionsToAccount(authUser.id, nextState.sessions);
+    }
   };
 
   const switchMode = async (mode: TimerMode, autoStart = false) => {
@@ -106,7 +150,86 @@ const App = () => {
     }
 
     await updateSettings(settingsDraft);
+
+    if (authUser) {
+      await syncSettingsToAccount(authUser.id, settingsDraft);
+    }
+
     setView("timer");
+    setAuthNotice("Settings saved.");
+  };
+
+  const handleSignUp = async () => {
+    setAuthBusy(true);
+    setAuthError(null);
+    setAuthNotice(null);
+
+    const { error, data } = await signUpWithEmail(authEmail, authPassword, authDisplayName);
+
+    if (error) {
+      setAuthError(error.message);
+      setAuthBusy(false);
+      return;
+    }
+
+    if (!data.session) {
+      setAuthNotice("Check your email to confirm your account.");
+      setAuthBusy(false);
+      return;
+    }
+
+    setAuthNotice("Account created.");
+    setAuthBusy(false);
+    await refresh();
+  };
+
+  const handleSignIn = async () => {
+    setAuthBusy(true);
+    setAuthError(null);
+    setAuthNotice(null);
+
+    const { error } = await signInWithEmail(authEmail, authPassword);
+
+    if (error) {
+      setAuthError(error.message);
+      setAuthBusy(false);
+      return;
+    }
+
+    setAuthNotice("Signed in.");
+    setAuthBusy(false);
+    await refresh();
+  };
+
+  const handleSignOut = async () => {
+    setAuthBusy(true);
+    setAuthError(null);
+    setAuthNotice(null);
+    await signOutAccount();
+    setAuthBusy(false);
+    setAuthNotice("Signed out.");
+  };
+
+  const handleProfileSave = async () => {
+    if (!authUser) {
+      return;
+    }
+
+    setAuthBusy(true);
+    setAuthError(null);
+    setAuthNotice(null);
+
+    const { error } = await updateProfileName(authUser.id, profileName.trim());
+
+    if (error) {
+      setAuthError(error.message);
+      setAuthBusy(false);
+      return;
+    }
+
+    setAuthNotice("Profile updated.");
+    setAuthBusy(false);
+    await refresh();
   };
 
   return (
@@ -255,6 +378,78 @@ const App = () => {
               <h1>Settings</h1>
               <p>Adjust session lengths and auto break.</p>
             </div>
+            <section className="account-card">
+              <div className="account-header">
+                <div>
+                  <span className="settings-label">Account</span>
+                  <h2>{authUser ? "Sync is on" : "Sign in to sync across Chrome profiles"}</h2>
+                </div>
+              </div>
+
+              {authUser ? (
+                <div className="account-body">
+                  <label className="account-field">
+                    <span className="settings-label">Display Name</span>
+                    <input
+                      className="settings-input account-input"
+                      type="text"
+                      value={profileName}
+                      onChange={(event) => setProfileName(event.target.value)}
+                    />
+                  </label>
+                  <div className="account-meta">{authUser.email}</div>
+                  <div className="account-actions">
+                    <button className="action" disabled={authBusy} onClick={() => void handleProfileSave()}>
+                      Save Name
+                    </button>
+                    <button className="action" disabled={authBusy} onClick={() => void handleSignOut()}>
+                      Log Out
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="account-body">
+                  <label className="account-field">
+                    <span className="settings-label">Name</span>
+                    <input
+                      className="settings-input account-input"
+                      type="text"
+                      value={authDisplayName}
+                      onChange={(event) => setAuthDisplayName(event.target.value)}
+                    />
+                  </label>
+                  <label className="account-field">
+                    <span className="settings-label">Email</span>
+                    <input
+                      className="settings-input account-input"
+                      type="email"
+                      value={authEmail}
+                      onChange={(event) => setAuthEmail(event.target.value)}
+                    />
+                  </label>
+                  <label className="account-field">
+                    <span className="settings-label">Password</span>
+                    <input
+                      className="settings-input account-input"
+                      type="password"
+                      value={authPassword}
+                      onChange={(event) => setAuthPassword(event.target.value)}
+                    />
+                  </label>
+                  <div className="account-actions">
+                    <button className="action" disabled={authBusy} onClick={() => void handleSignIn()}>
+                      Log In
+                    </button>
+                    <button className="action" disabled={authBusy} onClick={() => void handleSignUp()}>
+                      Sign Up
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {authNotice ? <div className="account-notice">{authNotice}</div> : null}
+              {authError ? <div className="account-error">{authError}</div> : null}
+            </section>
             <section className="settings-group">
               <div className="settings-row">
                 <div className="settings-copy">
