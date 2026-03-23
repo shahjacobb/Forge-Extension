@@ -57,11 +57,38 @@ const completeCurrentSession = async (state: PersistedState) => {
 
   await setState(nextState);
 
+  const newSessionCount = nextState.timer.sessionCount;
+  const isMilestone = state.timer.mode === "focus" && newSessionCount > 0 && newSessionCount % 4 === 0;
+  const chime = isMilestone ? "milestone" : state.timer.mode === "focus" ? "focus" : "break";
+
+  // Play chime via offscreen document (fire and forget — don't await or it blocks the notification)
+  const offscreenUrl = chrome.runtime.getURL("offscreen.html");
+  const existing = await chrome.offscreen.hasDocument();
+  if (!existing) {
+    await chrome.offscreen.createDocument({
+      url: offscreenUrl,
+      reasons: [chrome.offscreen.Reason.AUDIO_PLAYBACK],
+      justification: "Play session complete chime"
+    });
+  }
+  void chrome.runtime.sendMessage({ type: "playChime", chime }).catch(() => {});
+
+  const title = isMilestone
+    ? "4 sessions done — take a long break"
+    : state.timer.mode === "focus"
+      ? "Focus session done"
+      : "Break over";
+  const message = isMilestone
+    ? "Great work. Step away for 15–20 minutes."
+    : state.timer.mode === "focus"
+      ? "Time to step away."
+      : "Ready to focus again.";
+
   await chrome.notifications.create({
     type: "basic",
-    iconUrl: "icon-128.png",
-    title: state.timer.mode === "focus" ? "Focus complete" : "Break complete",
-    message: state.timer.mode === "focus" ? "Step away for a reset." : "Back to the grid."
+    iconUrl: chrome.runtime.getURL("icon-128.png"),
+    title,
+    message
   });
 };
 

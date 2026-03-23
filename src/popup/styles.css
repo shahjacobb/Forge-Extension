@@ -77,7 +77,6 @@ a {
   gap: 12px;
 }
 
-.topbar,
 .topbar-actions,
 .status-row,
 .mode-switcher {
@@ -86,9 +85,12 @@ a {
   gap: 10px;
 }
 
+/* FIX: was display:grid which stacked brand and nav vertically */
 .topbar {
-  display: grid;
-  gap: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
 }
 
 .topbar-actions {
@@ -144,6 +146,21 @@ a {
   letter-spacing: -0.08em;
 }
 
+/* FIX: thin progress bar under the clock */
+.progress-bar-wrap {
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.32);
+  transition: width 1s linear;
+}
+
 .status-line {
   color: rgba(255, 255, 255, 0.72);
 }
@@ -156,9 +173,10 @@ a {
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
+/* FIX: green = active, red = error/danger */
 .status-dot.live {
-  background: #ff4d4f;
-  box-shadow: 0 0 14px rgba(255, 77, 79, 0.85), 0 0 32px rgba(255, 77, 79, 0.28);
+  background: #4ade80;
+  box-shadow: 0 0 14px rgba(74, 222, 128, 0.75), 0 0 32px rgba(74, 222, 128, 0.25);
 }
 
 .mode-row {
@@ -177,13 +195,6 @@ a {
 
 .secondary-section {
   padding-top: 0;
-}
-
-.section-label {
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  font-size: 0.66rem;
-  color: rgba(255, 255, 255, 0.42);
 }
 
 .controls {
@@ -448,11 +459,49 @@ a {
   color: inherit;
   padding: 10px 12px;
   font-size: 1rem;
+  outline: none;
 }
 
+.settings-input:focus {
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+/* FIX: custom toggle instead of native checkbox */
 .settings-toggle {
-  width: 22px;
-  height: 22px;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 44px;
+  height: 26px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 200ms ease, border-color 200ms ease;
+}
+
+.settings-toggle::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  transition: transform 200ms ease, background 200ms ease;
+}
+
+.settings-toggle:checked {
+  background: rgba(74, 222, 128, 0.25);
+  border-color: rgba(74, 222, 128, 0.45);
+}
+
+.settings-toggle:checked::after {
+  transform: translateX(18px);
+  background: #4ade80;
 }
 
 .settings-actions {
@@ -493,6 +542,15 @@ a {
 
 .stat-card strong {
   font-size: 1.2rem;
+}
+
+/* FIX: empty state for activity view */
+.activity-empty {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.38);
+  font-size: 0.88rem;
+  padding: 20px 0;
+  line-height: 1.5;
 }
 
 .activity-shell {
@@ -539,4 +597,51 @@ a {
 
 .activity-subtle {
   color: rgba(255, 255, 255, 0.66);
+}
+
+/* ── Completion modal ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+
+.modal-card {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 24px;
+  padding: 28px 22px 22px;
+  display: grid;
+  gap: 16px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.modal-title {
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  font-size: 1.7rem;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: #f7f7f5;
+}
+
+.modal-sub {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-top: -6px;
+}
+
+.modal-actions {
+  display: grid;
+  gap: 8px;
+  margin-top: 4px;
 }

@@ -1,17 +1,21 @@
 {
   "manifest_version": 3,
-  "name": "Forge",
+  "name": "Forge (Claude)",
   "version": "0.0.1",
-  "description": "Minimal pomodoro timer and session tracker with local progress insights.",
-  "permissions": ["storage", "alarms", "notifications"],
+  "description": "Focus timer that gets out of your way. Tracks sessions, reminds you to break.",
+  "permissions": ["storage", "alarms", "notifications", "offscreen"],
   "host_permissions": ["https://tiopzxojmnortiwbgfrx.supabase.co/*"],
   "background": {
     "service_worker": "background.js",
     "type": "module"
   },
+  "icons": {
+    "128": "icon-128.png"
+  },
   "action": {
-    "default_title": "Forge",
-    "default_popup": "popup.html"
+    "default_title": "Forge (Claude)",
+    "default_popup": "popup.html",
+    "default_icon": "icon-128.png"
   },
   "options_page": "options.html"
 }
