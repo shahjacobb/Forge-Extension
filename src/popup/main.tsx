@@ -31,6 +31,7 @@ const App = () => {
   const [state, setState] = React.useState<PersistedState | null>(null);
   const [now, setNow] = React.useState(Date.now());
   const [view, setView] = React.useState<PopupView>("timer");
+  const [settingsDraft, setSettingsDraft] = React.useState<TimerSettings | null>(null);
 
   const refresh = React.useCallback(async () => {
     const nextState = await sendMessage<PersistedState>({ type: "getState" });
@@ -42,6 +43,12 @@ const App = () => {
     const timer = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(timer);
   }, [refresh]);
+
+  React.useEffect(() => {
+    if (state) {
+      setSettingsDraft(state.settings);
+    }
+  }, [state]);
 
   if (!state) {
     return <main className="shell loading">Loading control surface...</main>;
@@ -87,6 +94,21 @@ const App = () => {
     setState(nextState);
   };
 
+  const hasSettingsChanges =
+    settingsDraft !== null &&
+    (settingsDraft.focusMinutes !== state.settings.focusMinutes ||
+      settingsDraft.breakMinutes !== state.settings.breakMinutes ||
+      settingsDraft.autoStartBreaks !== state.settings.autoStartBreaks);
+
+  const saveSettings = async () => {
+    if (!settingsDraft) {
+      return;
+    }
+
+    await updateSettings(settingsDraft);
+    setView("timer");
+  };
+
   return (
     <main className="shell">
       <section className="hero-panel">
@@ -95,16 +117,32 @@ const App = () => {
             <div className="eyebrow">Forge</div>
             <div className="date-line">{currentDate}</div>
           </div>
-          <div className="topbar-actions topbar-tabs">
-            <button className={`toolbar-link${view === "timer" ? " active-tab" : ""}`} onClick={() => setView("timer")}>
-              Timer
-            </button>
-            <button className={`toolbar-link${view === "activity" ? " active-tab" : ""}`} onClick={() => setView("activity")}>
-              Activity
-            </button>
-            <button className={`toolbar-link${view === "settings" ? " active-tab" : ""}`} onClick={() => setView("settings")}>
-              Settings
-            </button>
+          <div className="topbar-actions">
+            {view === "timer" ? (
+              <>
+                <button className="toolbar-link" onClick={() => setView("activity")}>
+                  Activity
+                </button>
+                <button className="toolbar-link" onClick={() => setView("settings")}>
+                  Settings
+                </button>
+              </>
+            ) : null}
+            {view === "activity" ? (
+              <>
+                <button className="toolbar-link" onClick={() => setView("timer")}>
+                  Back
+                </button>
+                <button className="toolbar-link" onClick={() => setView("settings")}>
+                  Settings
+                </button>
+              </>
+            ) : null}
+            {view === "settings" ? (
+              <button className="toolbar-link" onClick={() => setView("timer")}>
+                Back
+              </button>
+            ) : null}
           </div>
         </div>
         {view === "timer" ? (
@@ -227,8 +265,13 @@ const App = () => {
                   className="settings-input"
                   type="number"
                   min={1}
-                  value={state.settings.focusMinutes}
-                  onChange={(event) => void updateSettings({ focusMinutes: Number(event.target.value) || 1 })}
+                  value={settingsDraft?.focusMinutes ?? state.settings.focusMinutes}
+                  onChange={(event) =>
+                    setSettingsDraft((current) => ({
+                      ...(current ?? state.settings),
+                      focusMinutes: Number(event.target.value) || 1
+                    }))
+                  }
                 />
               </div>
 
@@ -241,8 +284,13 @@ const App = () => {
                   className="settings-input"
                   type="number"
                   min={1}
-                  value={state.settings.breakMinutes}
-                  onChange={(event) => void updateSettings({ breakMinutes: Number(event.target.value) || 1 })}
+                  value={settingsDraft?.breakMinutes ?? state.settings.breakMinutes}
+                  onChange={(event) =>
+                    setSettingsDraft((current) => ({
+                      ...(current ?? state.settings),
+                      breakMinutes: Number(event.target.value) || 1
+                    }))
+                  }
                 />
               </div>
 
@@ -254,11 +302,22 @@ const App = () => {
                 <input
                   className="settings-toggle"
                   type="checkbox"
-                  checked={state.settings.autoStartBreaks}
-                  onChange={(event) => void updateSettings({ autoStartBreaks: event.target.checked })}
+                  checked={settingsDraft?.autoStartBreaks ?? state.settings.autoStartBreaks}
+                  onChange={(event) =>
+                    setSettingsDraft((current) => ({
+                      ...(current ?? state.settings),
+                      autoStartBreaks: event.target.checked
+                    }))
+                  }
                 />
               </div>
             </section>
+            <div className="settings-actions">
+              <span className="settings-hint">Changes only apply when you press save.</span>
+              <button className="action primary action-save" disabled={!hasSettingsChanges} onClick={() => void saveSettings()}>
+                Save Changes
+              </button>
+            </div>
           </div>
         ) : null}
       </section>
