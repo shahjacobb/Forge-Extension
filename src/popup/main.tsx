@@ -130,8 +130,8 @@ const App = () => {
             ) : null}
             {view === "activity" ? (
               <>
-                <button className="toolbar-link" onClick={() => setView("timer")}>
-                  Back
+                <button className="toolbar-link back-link" onClick={() => setView("timer")}>
+                  &lt; Back
                 </button>
                 <button className="toolbar-link" onClick={() => setView("settings")}>
                   Settings
@@ -139,8 +139,8 @@ const App = () => {
               </>
             ) : null}
             {view === "settings" ? (
-              <button className="toolbar-link" onClick={() => setView("timer")}>
-                Back
+              <button className="toolbar-link back-link" onClick={() => setView("timer")}>
+                &lt; Back
               </button>
             ) : null}
           </div>
@@ -253,13 +253,13 @@ const App = () => {
           <div className="popup-view settings-view">
             <div className="view-heading">
               <h1>Settings</h1>
-              <p>Adjust the length of your focus and break sessions. You can also turn on auto break.</p>
+              <p>Adjust session lengths and auto break.</p>
             </div>
             <section className="settings-group">
               <div className="settings-row">
                 <div className="settings-copy">
                   <span className="settings-label">Focus Session</span>
-                  <p>How long each focus session lasts.</p>
+                  <p>Length of each focus block.</p>
                 </div>
                 <input
                   className="settings-input"
@@ -278,7 +278,7 @@ const App = () => {
               <div className="settings-row">
                 <div className="settings-copy">
                   <span className="settings-label">Break Session</span>
-                  <p>How long each break lasts.</p>
+                  <p>Length of each break.</p>
                 </div>
                 <input
                   className="settings-input"
@@ -297,7 +297,7 @@ const App = () => {
               <div className="settings-row">
                 <div className="settings-copy">
                   <span className="settings-label">Auto Break</span>
-                  <p>Start the break automatically when focus ends.</p>
+                  <p>Start break when focus ends.</p>
                 </div>
                 <input
                   className="settings-toggle"
@@ -313,7 +313,6 @@ const App = () => {
               </div>
             </section>
             <div className="settings-actions">
-              <span className="settings-hint">Changes only apply when you press save.</span>
               <button className="action primary action-save" disabled={!hasSettingsChanges} onClick={() => void saveSettings()}>
                 Save Changes
               </button>

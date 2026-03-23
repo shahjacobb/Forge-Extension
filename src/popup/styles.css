@@ -110,6 +110,10 @@ a {
     box-shadow 180ms ease;
 }
 
+.back-link {
+  padding-left: 14px;
+}
+
 .brand-block {
   min-width: 0;
 }
@@ -321,7 +325,7 @@ a {
 
 .view-heading {
   display: grid;
-  gap: 6px;
+  gap: 4px;
 }
 
 .view-heading h1,
@@ -339,7 +343,8 @@ a {
 
 .view-heading p {
   color: rgba(255, 255, 255, 0.7);
-  line-height: 1.45;
+  line-height: 1.35;
+  font-size: 0.95rem;
 }
 
 .settings-card h1,
@@ -358,34 +363,37 @@ a {
 
 .settings-group {
   display: grid;
-  gap: 14px;
+  gap: 10px;
 }
 
 .settings-row {
-  padding: 14px 16px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.02);
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.018);
   border: 1px solid rgba(255, 255, 255, 0.08);
+  align-items: center;
 }
 
 .settings-copy {
   display: grid;
-  gap: 4px;
+  gap: 3px;
 }
 
 .settings-copy p {
   color: rgba(255, 255, 255, 0.66);
-  font-size: 0.92rem;
+  font-size: 0.88rem;
+  line-height: 1.25;
 }
 
 .settings-input {
-  width: 82px;
+  width: 78px;
   text-align: center;
-  border-radius: 14px;
+  border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.04);
   color: inherit;
-  padding: 12px 14px;
+  padding: 10px 12px;
+  font-size: 1rem;
 }
 
 .settings-toggle {
@@ -395,17 +403,16 @@ a {
 
 .settings-actions {
   display: grid;
-  gap: 10px;
-  padding-top: 4px;
-}
-
-.settings-hint {
-  color: rgba(255, 255, 255, 0.62);
-  font-size: 0.84rem;
+  gap: 8px;
+  padding-top: 2px;
 }
 
 .action-save {
   width: 100%;
+  padding: 15px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
 }
 
 .meta-strip {
