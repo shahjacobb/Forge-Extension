@@ -5,6 +5,21 @@ const createAlarm = (endsAt: number) => {
   chrome.alarms.create(alarmName, { when: endsAt });
 };
 
+const playSound = (chime: "start" | "pause" | "focus" | "break" | "milestone") => {
+  void (async () => {
+    const offscreenUrl = chrome.runtime.getURL("offscreen.html");
+    const existing = await chrome.offscreen.hasDocument();
+    if (!existing) {
+      await chrome.offscreen.createDocument({
+        url: offscreenUrl,
+        reasons: [chrome.offscreen.Reason.AUDIO_PLAYBACK],
+        justification: "Play timer sound"
+      });
+    }
+    void chrome.runtime.sendMessage({ type: "playChime", chime }).catch(() => {});
+  })();
+};
+
 const clearAlarm = async () => {
   await chrome.alarms.clear(alarmName);
 };
@@ -61,17 +76,7 @@ const completeCurrentSession = async (state: PersistedState) => {
   const isMilestone = state.timer.mode === "focus" && newSessionCount > 0 && newSessionCount % 4 === 0;
   const chime = isMilestone ? "milestone" : state.timer.mode === "focus" ? "focus" : "break";
 
-  // Play chime via offscreen document (fire and forget — don't await or it blocks the notification)
-  const offscreenUrl = chrome.runtime.getURL("offscreen.html");
-  const existing = await chrome.offscreen.hasDocument();
-  if (!existing) {
-    await chrome.offscreen.createDocument({
-      url: offscreenUrl,
-      reasons: [chrome.offscreen.Reason.AUDIO_PLAYBACK],
-      justification: "Play session complete chime"
-    });
-  }
-  void chrome.runtime.sendMessage({ type: "playChime", chime }).catch(() => {});
+  playSound(chime);
 
   const title = isMilestone
     ? "4 sessions done — take a long break"
@@ -116,6 +121,7 @@ const handleCommand = async (command: TimerCommand) => {
     };
     await setState(nextState);
     createAlarm(nextState.timer.endsAt!);
+    playSound("start");
     return nextState;
   }
 
@@ -123,6 +129,7 @@ const handleCommand = async (command: TimerCommand) => {
     const nextState = { ...state, timer: buildRunningTimer(state) };
     await setState(nextState);
     createAlarm(nextState.timer.endsAt!);
+    playSound("start");
     return nextState;
   }
 
@@ -140,6 +147,7 @@ const handleCommand = async (command: TimerCommand) => {
     };
     await clearAlarm();
     await setState(nextState);
+    playSound("pause");
     return nextState;
   }
 

@@ -6,6 +6,10 @@ Originally built with Codex (GPT-5.4). Continued and improved with Claude Sonnet
 
 ---
 
+<img src="public/screenshot.png" alt="Forge popup showing a running focus session" width="360" />
+
+---
+
 ## What it does
 
 - Focus and break timer with configurable durations
