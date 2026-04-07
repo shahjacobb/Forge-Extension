@@ -57,13 +57,14 @@ a {
   padding: 18px;
   display: grid;
   gap: 14px;
+  align-content: start;
 }
 
 .eyebrow,
 .stat-label,
 .settings-label {
   text-transform: uppercase;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.1em;
   font-size: 0.68rem;
   color: rgba(255, 255, 255, 0.48);
 }
@@ -587,6 +588,8 @@ a {
   padding: 14px;
   display: grid;
   gap: 8px;
+  overflow: hidden;
+  min-width: 0;
 }
 
 .stat-card strong {
@@ -646,6 +649,57 @@ a {
 
 .activity-subtle {
   color: rgba(255, 255, 255, 0.66);
+}
+
+/* ── Compact breakdown (popup activity) ── */
+.compact-list {
+  max-height: 210px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+}
+
+.compact-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.compact-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.compact-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+}
+
+.compact-row {
+  padding: 10px 12px;
+  border-radius: 14px;
+  font-size: 0.9rem;
+}
+
+.compact-row strong {
+  font-size: 0.9rem;
+}
+
+.compact-row .activity-subtle {
+  font-size: 0.78rem;
+}
+
+/* ── Streak badge ── */
+.streak-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(251, 191, 36, 0.95);
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.2);
 }
 
 /* ── Completion modal ── */

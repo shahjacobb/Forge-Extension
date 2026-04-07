@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
-import { buildWeeklyData, getWeekLabel } from "../shared/analytics";
+import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { buildWeeklyData, computeStreak, getWeekLabel } from "../shared/analytics";
 import type { PersistedState } from "../shared/types";
 import "../popup/styles.css";
 
@@ -19,6 +19,7 @@ const App = () => {
   const weeklyData = buildWeeklyData(state.sessions);
   const focusToday = weeklyData.at(-1)?.minutes ?? 0;
   const weeklyTotal = weeklyData.reduce((sum, day) => sum + day.minutes, 0);
+  const streak = computeStreak(state.sessions);
   const todayLabel = new Date().toLocaleDateString(undefined, {
     weekday: "long",
     month: "short",
@@ -44,8 +45,8 @@ const App = () => {
           <strong>{weeklyTotal} min</strong>
         </article>
         <article className="stat-card">
-          <span className="stat-label">Rounds</span>
-          <strong>{state.timer.sessionCount}</strong>
+          <span className="stat-label">Streak</span>
+          <strong>{streak} {streak === 1 ? "day" : "days"}</strong>
         </article>
       </section>
 
@@ -60,6 +61,7 @@ const App = () => {
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={weeklyData}>
               <XAxis dataKey="label" axisLine={false} tickLine={false} />
+              <YAxis axisLine={false} tickLine={false} tick={{ fill: "rgba(255,255,255,0.3)", fontSize: 10 }} width={28} tickFormatter={(v: number) => `${v}m`} />
               <Tooltip
                 cursor={{ fill: "rgba(255,255,255,0.04)" }}
                 contentStyle={{

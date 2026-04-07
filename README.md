@@ -13,11 +13,28 @@ Originally built with Codex (GPT-5.4). Continued and improved with Claude Sonnet
 ## What it does
 
 - Focus and break timer with configurable durations
-- Session history and weekly activity chart
+- Session history and weekly activity chart with Y-axis labels
+- Streak tracking — consecutive days with focus sessions
+- Daily breakdown of the last 7 days (in both popup and standalone activity page)
+- Contextual completion messages based on streak and milestone progress
 - Sound notifications (distinct chimes for focus done, break done, and every 4th session milestone)
 - Chrome system notifications when a session ends
-- In-popup completion modal so you never miss a transition
+- In-popup completion modal with streak badge
 - Account sync across Chrome profiles (Supabase auth)
+
+## Changelog
+
+### 2026-04-07
+
+**Activity & UX improvements:**
+- Added streak counter — tracks consecutive days with focus sessions, shown in activity stat cards and completion modal
+- Ported daily breakdown list from standalone activity page into the popup activity view (compact, scrollable)
+- Added Y-axis labels to all bar charts for readability
+- Contextual completion messages — modal text varies based on streak length and milestone status
+- Streak badge (amber pill) appears in completion modal when streak >= 2 days
+- Fixed stat card text overflow — reduced label letter-spacing, added overflow protection
+- Fixed large vertical gap in popup activity/settings views (align-content: start)
+- Bar chart now always renders (even with 0 data) instead of being hidden
 
 ## Install in Chrome
 

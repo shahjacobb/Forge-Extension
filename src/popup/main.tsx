@@ -1,5 +1,5 @@
 import React from "react";
-import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
+import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import ReactDOM from "react-dom/client";
 import type { User } from "@supabase/supabase-js";
 import {
@@ -12,7 +12,7 @@ import {
   syncSettingsToAccount,
   updateProfileName
 } from "../shared/account";
-import { buildWeeklyData, getWeekLabel } from "../shared/analytics";
+import { buildWeeklyData, computeStreak, getCompletionMessage, getWeekLabel } from "../shared/analytics";
 import { supabase } from "../shared/supabase";
 import type { PersistedState, TimerCommand, TimerMode, TimerSettings } from "../shared/types";
 import "./styles.css";
@@ -118,6 +118,7 @@ const App = () => {
   const weeklyData = buildWeeklyData(state.sessions);
   const focusToday = weeklyData.at(-1)?.minutes ?? 0;
   const weeklyTotal = weeklyData.reduce((sum, day) => sum + day.minutes, 0);
+  const streak = computeStreak(state.sessions);
   const currentDate = formatDate(new Date(now));
   const activeModeLabel = state.timer.mode === "focus" ? "Focus Session" : "Break Session";
   const isRunning = state.timer.status === "running";
@@ -359,38 +360,53 @@ const App = () => {
                 <strong>{weeklyTotal} min</strong>
               </article>
               <article className="stat-card">
-                <span className="stat-label">Completed</span>
-                <strong>{state.timer.sessionCount}</strong>
+                <span className="stat-label">Streak</span>
+                <strong>{streak} {streak === 1 ? "day" : "days"}</strong>
               </article>
             </section>
-            {weeklyTotal === 0 ? (
+            <div className="activity-chart compact-chart">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={weeklyData}>
+                  <XAxis dataKey="label" axisLine={false} tickLine={false} tick={{ fill: "rgba(255,255,255,0.48)", fontSize: 11 }} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fill: "rgba(255,255,255,0.3)", fontSize: 10 }} width={28} tickFormatter={(v: number) => `${v}m`} />
+                  <Tooltip
+                    cursor={{ fill: "rgba(255,255,255,0.04)" }}
+                    contentStyle={{
+                      background: "#0f0f10",
+                      border: "1px solid rgba(255,255,255,0.12)",
+                      borderRadius: 16
+                    }}
+                    formatter={(value: number) => [`${value} min`, "Focus"]}
+                    labelFormatter={(label: string, payload) => payload?.[0]?.payload?.fullLabel ?? label}
+                  />
+                  <Bar dataKey="minutes" fill="url(#popupActivityBars)" radius={[6, 6, 2, 2]} minPointSize={weeklyTotal === 0 ? 0 : 2} />
+                  <defs>
+                    <linearGradient id="popupActivityBars" x1="0" x2="0" y1="0" y2="1">
+                      <stop offset="0%" stopColor="#f5f5f5" />
+                      <stop offset="100%" stopColor="#6b7280" />
+                    </linearGradient>
+                  </defs>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            {weeklyTotal === 0 && (
               <div className="activity-empty">No focus sessions yet.<br />Start your first session.</div>
-            ) : (
-              <div className="activity-chart compact-chart">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={weeklyData}>
-                    <XAxis dataKey="label" axisLine={false} tickLine={false} />
-                    <Tooltip
-                      cursor={{ fill: "rgba(255,255,255,0.04)" }}
-                      contentStyle={{
-                        background: "#0f0f10",
-                        border: "1px solid rgba(255,255,255,0.12)",
-                        borderRadius: 16
-                      }}
-                      formatter={(value: number) => [`${value} min`, "Focus"]}
-                      labelFormatter={(label: string, payload) => payload?.[0]?.payload?.fullLabel ?? label}
-                    />
-                    <Bar dataKey="minutes" fill="url(#popupActivityBars)" radius={[10, 10, 4, 4]} />
-                    <defs>
-                      <linearGradient id="popupActivityBars" x1="0" x2="0" y1="0" y2="1">
-                        <stop offset="0%" stopColor="#f5f5f5" />
-                        <stop offset="100%" stopColor="#6b7280" />
-                      </linearGradient>
-                    </defs>
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
             )}
+            <div className="panel-header">
+              <h2>Daily breakdown</h2>
+              <span className="activity-subtle">Last 7 days</span>
+            </div>
+            <div className="activity-list compact-list">
+              {weeklyData.map((day) => (
+                <article className="activity-row compact-row" key={day.key}>
+                  <div>
+                    <strong>{day.fullLabel}</strong>
+                    <div className="activity-subtle">{day.minutes > 0 ? "Focus tracked" : "No sessions"}</div>
+                  </div>
+                  <strong>{day.minutes} min</strong>
+                </article>
+              ))}
+            </div>
           </div>
         ) : null}
 
@@ -538,23 +554,22 @@ const App = () => {
         ) : null}
       </section>
 
-      {completedMode ? (
+      {completedMode ? (() => {
+        const msg = completedMode === "break"
+          ? { title: "Break over.", subtitle: "Ready when you are." }
+          : getCompletionMessage({
+              streak,
+              sessionCount: state.timer.sessionCount,
+              mode: completedMode === "milestone" ? "milestone" : "focus"
+            });
+        return (
         <div className="modal-overlay">
           <div className="modal-card">
-            <div className="modal-title">
-              {completedMode === "milestone"
-                ? "4 sessions done."
-                : completedMode === "focus"
-                  ? "Focus session done."
-                  : "Break over."}
-            </div>
-            <div className="modal-sub">
-              {completedMode === "milestone"
-                ? "Serious work. Take a long break — 15 to 20 minutes."
-                : completedMode === "focus"
-                  ? "Time to step away for a bit."
-                  : "Ready when you are."}
-            </div>
+            <div className="modal-title">{msg.title}</div>
+            <div className="modal-sub">{msg.subtitle}</div>
+            {streak >= 2 && completedMode !== "break" && (
+              <div className="streak-badge">{streak} day streak</div>
+            )}
             <div className="modal-actions">
               <button
                 className="action action-large primary-cta primary"
@@ -574,7 +589,8 @@ const App = () => {
             </div>
           </div>
         </div>
-      ) : null}
+        );
+      })() : null}
     </main>
   );
 };
