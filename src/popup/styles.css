@@ -651,6 +651,129 @@ a {
   color: rgba(255, 255, 255, 0.66);
 }
 
+/* ── Week navigation ── */
+.week-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.week-nav-btn {
+  padding: 5px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+
+.week-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #f5f5f5;
+}
+
+/* ── Activity view toggle (weekly / monthly) ── */
+.view-toggle {
+  display: flex;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+}
+
+.view-toggle-btn {
+  padding: 7px 14px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.view-toggle-btn.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: #f5f5f5;
+}
+
+.view-toggle-btn:hover:not(.active) {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* ── Monthly calendar grid ── */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+
+.calendar-header {
+  text-align: center;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.35);
+  padding: 4px 0;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.4);
+  position: relative;
+}
+
+.calendar-day.has-data {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
+
+.calendar-day.today {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.calendar-day .heat-bg {
+  position: absolute;
+  inset: 2px;
+  border-radius: 6px;
+  z-index: 0;
+}
+
+.calendar-day span {
+  position: relative;
+  z-index: 1;
+}
+
+.calendar-day.outside {
+  color: rgba(255, 255, 255, 0.15);
+}
+
+.month-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.month-summary {
+  display: flex;
+  gap: 16px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.82rem;
+  padding-top: 4px;
+}
+
+.month-summary strong {
+  color: rgba(255, 255, 255, 0.9);
+}
+
 /* ── Compact breakdown (popup activity) ── */
 .compact-list {
   max-height: 210px;

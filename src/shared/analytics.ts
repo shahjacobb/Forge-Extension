@@ -7,10 +7,13 @@ export interface WeeklyBucket {
   minutes: number;
 }
 
-export const buildWeeklyData = (sessions: SessionRecord[]): WeeklyBucket[] => {
+export const buildWeeklyData = (sessions: SessionRecord[], weekOffset = 0): WeeklyBucket[] => {
+  const baseDate = new Date();
+  baseDate.setHours(0, 0, 0, 0);
+  baseDate.setDate(baseDate.getDate() + weekOffset * 7);
+
   const buckets = Array.from({ length: 7 }, (_, index) => {
-    const date = new Date();
-    date.setHours(0, 0, 0, 0);
+    const date = new Date(baseDate);
     date.setDate(date.getDate() - (6 - index));
     const key = date.toISOString().slice(0, 10);
 
@@ -34,8 +37,9 @@ export const buildWeeklyData = (sessions: SessionRecord[]): WeeklyBucket[] => {
   return buckets;
 };
 
-export const getWeekLabel = (): string => {
+export const getWeekLabel = (weekOffset = 0): string => {
   const today = new Date();
+  today.setDate(today.getDate() + weekOffset * 7);
   const start = new Date(today);
   start.setDate(today.getDate() - today.getDay());
 
@@ -71,6 +75,67 @@ export const computeStreak = (sessions: SessionRecord[]): number => {
   }
 
   return streak;
+};
+
+export interface MonthDay {
+  key: string;
+  day: number;
+  minutes: number;
+  isToday: boolean;
+  isOutside: boolean;
+}
+
+export const buildMonthData = (sessions: SessionRecord[], monthOffset = 0): { label: string; days: MonthDay[]; totalMinutes: number; activeDays: number } => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + monthOffset;
+  const first = new Date(year, month, 1);
+  const last = new Date(year, month + 1, 0);
+
+  const todayKey = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString().slice(0, 10);
+  const label = first.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+
+  // Build minute map from sessions
+  const minuteMap = new Map<string, number>();
+  for (const session of sessions) {
+    if (session.mode === "focus") {
+      const key = session.completedAt.slice(0, 10);
+      minuteMap.set(key, (minuteMap.get(key) ?? 0) + Math.round(session.durationMs / 60_000));
+    }
+  }
+
+  const days: MonthDay[] = [];
+
+  // Pad start of month to align with Sunday
+  const startDay = first.getDay();
+  for (let i = startDay - 1; i >= 0; i--) {
+    const d = new Date(year, month, -i);
+    const key = d.toISOString().slice(0, 10);
+    days.push({ key, day: d.getDate(), minutes: minuteMap.get(key) ?? 0, isToday: false, isOutside: true });
+  }
+
+  // Days of the month
+  for (let d = 1; d <= last.getDate(); d++) {
+    const date = new Date(year, month, d);
+    const key = date.toISOString().slice(0, 10);
+    days.push({ key, day: d, minutes: minuteMap.get(key) ?? 0, isToday: key === todayKey, isOutside: false });
+  }
+
+  // Pad end to complete the last week
+  const remaining = 7 - (days.length % 7);
+  if (remaining < 7) {
+    for (let i = 1; i <= remaining; i++) {
+      const d = new Date(year, month + 1, i);
+      const key = d.toISOString().slice(0, 10);
+      days.push({ key, day: d.getDate(), minutes: minuteMap.get(key) ?? 0, isToday: false, isOutside: true });
+    }
+  }
+
+  const inMonthDays = days.filter((d) => !d.isOutside);
+  const totalMinutes = inMonthDays.reduce((sum, d) => sum + d.minutes, 0);
+  const activeDays = inMonthDays.filter((d) => d.minutes > 0).length;
+
+  return { label, days, totalMinutes, activeDays };
 };
 
 export const getCompletionMessage = (opts: {

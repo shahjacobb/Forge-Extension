@@ -12,7 +12,7 @@ import {
   syncSettingsToAccount,
   updateProfileName
 } from "../shared/account";
-import { buildWeeklyData, computeStreak, getCompletionMessage, getWeekLabel } from "../shared/analytics";
+import { buildMonthData, buildWeeklyData, computeStreak, getCompletionMessage, getWeekLabel } from "../shared/analytics";
 import { supabase } from "../shared/supabase";
 import type { PersistedState, TimerCommand, TimerMode, TimerSettings } from "../shared/types";
 import "./styles.css";
@@ -53,6 +53,9 @@ const App = () => {
   const [authError, setAuthError] = React.useState<string | null>(null);
   const [authNotice, setAuthNotice] = React.useState<string | null>(null);
   const [completedMode, setCompletedMode] = React.useState<TimerMode | "milestone" | null>(null);
+  const [weekOffset, setWeekOffset] = React.useState(0);
+  const [monthOffset, setMonthOffset] = React.useState(0);
+  const [activityMode, setActivityMode] = React.useState<"weekly" | "monthly">("weekly");
   const prevSessionCount = React.useRef<number | null>(null);
 
   const refresh = React.useCallback(async () => {
@@ -115,10 +118,15 @@ const App = () => {
   const progressPct =
     state.timer.status === "idle" ? 0 : Math.max(0, Math.min(100, ((totalMs - remainingMs) / totalMs) * 100));
 
-  const weeklyData = buildWeeklyData(state.sessions);
-  const focusToday = weeklyData.at(-1)?.minutes ?? 0;
-  const weeklyTotal = weeklyData.reduce((sum, day) => sum + day.minutes, 0);
+  const currentWeekData = buildWeeklyData(state.sessions);
+  const focusToday = currentWeekData.at(-1)?.minutes ?? 0;
+  const currentWeekTotal = currentWeekData.reduce((sum, day) => sum + day.minutes, 0);
   const streak = computeStreak(state.sessions);
+
+  const viewedWeekData = weekOffset === 0 ? currentWeekData : buildWeeklyData(state.sessions, weekOffset);
+  const viewedWeekTotal = weekOffset === 0 ? currentWeekTotal : viewedWeekData.reduce((sum, day) => sum + day.minutes, 0);
+  const monthData = buildMonthData(state.sessions, monthOffset);
+  const maxDayMinutes = Math.max(1, ...monthData.days.map((d) => d.minutes));
   const currentDate = formatDate(new Date(now));
   const activeModeLabel = state.timer.mode === "focus" ? "Focus Session" : "Break Session";
   const isRunning = state.timer.status === "running";
@@ -348,7 +356,10 @@ const App = () => {
           <div className="popup-view">
             <div className="view-heading">
               <h1>Focus activity</h1>
-              <p>{getWeekLabel()}</p>
+              <div className="view-toggle">
+                <button className={`view-toggle-btn${activityMode === "weekly" ? " active" : ""}`} onClick={() => setActivityMode("weekly")}>Weekly</button>
+                <button className={`view-toggle-btn${activityMode === "monthly" ? " active" : ""}`} onClick={() => setActivityMode("monthly")}>Monthly</button>
+              </div>
             </div>
             <section className="stats-grid">
               <article className="stat-card">
@@ -357,56 +368,101 @@ const App = () => {
               </article>
               <article className="stat-card">
                 <span className="stat-label">This Week</span>
-                <strong>{weeklyTotal} min</strong>
+                <strong>{currentWeekTotal} min</strong>
               </article>
               <article className="stat-card">
                 <span className="stat-label">Streak</span>
                 <strong>{streak} {streak === 1 ? "day" : "days"}</strong>
               </article>
             </section>
-            <div className="activity-chart compact-chart">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={weeklyData}>
-                  <XAxis dataKey="label" axisLine={false} tickLine={false} tick={{ fill: "rgba(255,255,255,0.48)", fontSize: 11 }} />
-                  <YAxis axisLine={false} tickLine={false} tick={{ fill: "rgba(255,255,255,0.3)", fontSize: 10 }} width={28} tickFormatter={(v: number) => `${v}m`} />
-                  <Tooltip
-                    cursor={{ fill: "rgba(255,255,255,0.04)" }}
-                    contentStyle={{
-                      background: "#0f0f10",
-                      border: "1px solid rgba(255,255,255,0.12)",
-                      borderRadius: 16
-                    }}
-                    formatter={(value: number) => [`${value} min`, "Focus"]}
-                    labelFormatter={(label: string, payload) => payload?.[0]?.payload?.fullLabel ?? label}
-                  />
-                  <Bar dataKey="minutes" fill="url(#popupActivityBars)" radius={[6, 6, 2, 2]} minPointSize={weeklyTotal === 0 ? 0 : 2} />
-                  <defs>
-                    <linearGradient id="popupActivityBars" x1="0" x2="0" y1="0" y2="1">
-                      <stop offset="0%" stopColor="#f5f5f5" />
-                      <stop offset="100%" stopColor="#6b7280" />
-                    </linearGradient>
-                  </defs>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-            {weeklyTotal === 0 && (
-              <div className="activity-empty">No focus sessions yet.<br />Start your first session.</div>
-            )}
-            <div className="panel-header">
-              <h2>Daily breakdown</h2>
-              <span className="activity-subtle">Last 7 days</span>
-            </div>
-            <div className="activity-list compact-list">
-              {weeklyData.map((day) => (
-                <article className="activity-row compact-row" key={day.key}>
-                  <div>
-                    <strong>{day.fullLabel}</strong>
-                    <div className="activity-subtle">{day.minutes > 0 ? "Focus tracked" : "No sessions"}</div>
+
+            {activityMode === "weekly" ? (
+              <>
+                <div className="panel-header">
+                  <h2>{getWeekLabel(weekOffset)}</h2>
+                  <div className="week-nav">
+                    <button className="week-nav-btn" onClick={() => setWeekOffset((o) => o - 1)}>←</button>
+                    {weekOffset < 0 && (
+                      <button className="week-nav-btn" onClick={() => setWeekOffset((o) => Math.min(0, o + 1))}>→</button>
+                    )}
+                    {weekOffset < 0 && (
+                      <button className="week-nav-btn" onClick={() => setWeekOffset(0)}>Today</button>
+                    )}
                   </div>
-                  <strong>{day.minutes} min</strong>
-                </article>
-              ))}
-            </div>
+                </div>
+                <div className="activity-chart compact-chart">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={viewedWeekData}>
+                      <XAxis dataKey="label" axisLine={false} tickLine={false} tick={{ fill: "rgba(255,255,255,0.48)", fontSize: 11 }} />
+                      <YAxis axisLine={false} tickLine={false} tick={{ fill: "rgba(255,255,255,0.3)", fontSize: 10 }} width={28} tickFormatter={(v: number) => `${v}m`} />
+                      <Tooltip
+                        cursor={{ fill: "rgba(255,255,255,0.04)" }}
+                        contentStyle={{
+                          background: "#0f0f10",
+                          border: "1px solid rgba(255,255,255,0.12)",
+                          borderRadius: 16
+                        }}
+                        formatter={(value: number) => [`${value} min`, "Focus"]}
+                        labelFormatter={(label: string, payload) => payload?.[0]?.payload?.fullLabel ?? label}
+                      />
+                      <Bar dataKey="minutes" fill="url(#popupActivityBars)" radius={[6, 6, 2, 2]} minPointSize={viewedWeekTotal === 0 ? 0 : 2} />
+                      <defs>
+                        <linearGradient id="popupActivityBars" x1="0" x2="0" y1="0" y2="1">
+                          <stop offset="0%" stopColor="#f5f5f5" />
+                          <stop offset="100%" stopColor="#6b7280" />
+                        </linearGradient>
+                      </defs>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+                {viewedWeekTotal === 0 && weekOffset === 0 && (
+                  <div className="activity-empty">No focus sessions yet.<br />Start your first session.</div>
+                )}
+                <div className="activity-list compact-list">
+                  {viewedWeekData.map((day) => (
+                    <article className="activity-row compact-row" key={day.key}>
+                      <div>
+                        <strong>{day.fullLabel}</strong>
+                        <div className="activity-subtle">{day.minutes > 0 ? "Focus tracked" : "No sessions"}</div>
+                      </div>
+                      <strong>{day.minutes} min</strong>
+                    </article>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="panel-header">
+                  <h2>{monthData.label}</h2>
+                  <div className="month-nav">
+                    <button className="week-nav-btn" onClick={() => setMonthOffset((o) => o - 1)}>←</button>
+                    {monthOffset < 0 && (
+                      <button className="week-nav-btn" onClick={() => setMonthOffset((o) => Math.min(0, o + 1))}>→</button>
+                    )}
+                    {monthOffset < 0 && (
+                      <button className="week-nav-btn" onClick={() => setMonthOffset(0)}>Today</button>
+                    )}
+                  </div>
+                </div>
+                <div className="calendar-grid">
+                  {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
+                    <div className="calendar-header" key={d}>{d}</div>
+                  ))}
+                  {monthData.days.map((day) => (
+                    <div className={`calendar-day${day.isToday ? " today" : ""}${day.minutes > 0 ? " has-data" : ""}${day.isOutside ? " outside" : ""}`} key={day.key}>
+                      {day.minutes > 0 && (
+                        <div className="heat-bg" style={{ background: `rgba(255, 255, 255, ${0.04 + 0.12 * (day.minutes / maxDayMinutes)})` }} />
+                      )}
+                      <span>{day.day}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="month-summary">
+                  <span><strong>{monthData.totalMinutes}</strong> min total</span>
+                  <span><strong>{monthData.activeDays}</strong> active days</span>
+                </div>
+              </>
+            )}
           </div>
         ) : null}
 
