@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="docs/shots/banner.png" alt="Lahza — a focus timer for Chrome" width="100%" />
+  <img src="docs/shots/banner.png" alt="Lahza — customizable focus timer for Chrome" width="100%" />
 </p>
 
 # Lahza
 
-**A focus timer for Chrome.** Classic Pomodoro if you want 25 and 5, or set the lengths yourself. Pin it on the toolbar — while it runs, the icon shows how much time you have left.
+**Customizable focus timer for Chrome.** Classic Pomodoro if you want 25 and 5, or set the lengths yourself. Pin it on the toolbar — while it runs, the icon shows how much time you have left.
 
 *Lahza* (لحظة) is said **LAH-zah**.
 
@@ -115,7 +115,7 @@ That writes **`lahza.zip`** next to `package.json`. Upload it in the [Developer 
 4. Upload `lahza.zip`
 5. Fill in:
    - Name: Lahza
-   - Summary: Focus timer for Chrome. Classic Pomodoro, or set your own session lengths.
+   - Summary: Customizable focus timer for Chrome. Classic Pomodoro, or set your own session lengths.
    - Category: Productivity
    - Screenshots: `docs/shots/timer.png`, `running.png`, `activity.png`, `month.png`, `settings.png`, `complete.png` (the form wants 1280×800 or 640×400)
    - Small tile: `public/icon-128.png`
