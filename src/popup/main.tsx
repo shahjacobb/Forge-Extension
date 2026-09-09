@@ -91,7 +91,7 @@ const TimerRing = ({
   running: boolean;
 }) => {
   const size = 228;
-  const stroke = 8;
+  const stroke = 10;
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference * (1 - Math.max(0, Math.min(100, progress)) / 100);
@@ -181,13 +181,27 @@ const App = () => {
     return () => window.clearInterval(timer);
   }, [refresh]);
 
+  const settingsSignature = state ? JSON.stringify(state.settings) : "";
+
   React.useEffect(() => {
     if (!state) {
       return;
     }
 
     setSettingsDraft(state.settings);
-    document.documentElement.dataset.theme = state.settings.theme;
+  }, [settingsSignature]);
+
+  React.useEffect(() => {
+    const theme = settingsDraft?.theme ?? state?.settings.theme;
+    if (theme) {
+      document.documentElement.dataset.theme = theme;
+    }
+  }, [settingsDraft?.theme, state?.settings.theme]);
+
+  React.useEffect(() => {
+    if (!state) {
+      return;
+    }
 
     if (prevSessions.current !== null && state.sessions.length > prevSessions.current) {
       const last = state.sessions.at(-1);
@@ -302,17 +316,18 @@ const App = () => {
     if (authUser) {
       await syncSettingsToAccount(authUser.id, nextState.settings);
     }
-    setAuthNotice("Settings saved and synced.");
-    setView("timer");
+    setAuthNotice("Settings saved.");
   };
 
   const applyPreset = (focusMinutes: number, breakMinutes: number, longBreakMinutes: number) => {
-    setSettingsDraft((current) => ({
-      ...(current ?? state.settings),
+    const next = {
+      ...(settingsDraft ?? state.settings),
       focusMinutes,
       breakMinutes,
       longBreakMinutes
-    }));
+    };
+    setSettingsDraft(next);
+    void updateSettings({ focusMinutes, breakMinutes, longBreakMinutes });
   };
 
   const handleAuth = async () => {
@@ -758,8 +773,12 @@ const App = () => {
               </div>
 
               {!cloudConfigured ? (
-                <div className="account-error">Cloud sync is not configured in this build.</div>
-              ) : authUser ? (
+                <p className="lede">
+                  Cloud sync needs a Supabase project. Add the keys in `.env.local`, then sign in here on every Chrome profile you use.
+                </p>
+              ) : null}
+
+              {authUser ? (
                 <div className="account-body">
                   <label className="account-field">
                     <span className="settings-label">Name</span>

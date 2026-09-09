@@ -57,12 +57,14 @@
   box-sizing: border-box;
 }
 
-html,
-body {
+html {
   margin: 0;
+  min-height: 100%;
+  background: var(--canvas);
 }
 
 body {
+  margin: 0 auto;
   min-width: 360px;
   max-width: 380px;
   min-height: 560px;
@@ -71,6 +73,7 @@ body {
   font-family: Inter, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
   font-size: 13.5px;
   letter-spacing: -0.011em;
+  box-shadow: 0 0 0 1px var(--hairline);
 }
 
 button,
@@ -449,6 +452,10 @@ input[type="number"]::-webkit-outer-spin-button {
 .tab.active {
   color: var(--ink);
   background: var(--surface);
+}
+
+.tab.active svg {
+  color: var(--primary);
 }
 
 .heading {
@@ -978,6 +985,7 @@ select.account-input {
 body.wide-page {
   max-width: none;
   min-width: 0;
+  box-shadow: none;
 }
 
 @media (max-width: 420px) {

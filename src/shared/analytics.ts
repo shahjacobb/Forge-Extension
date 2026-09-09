@@ -49,12 +49,17 @@ export const buildWeeklyData = (sessions: SessionRecord[], weekOffset = 0): Week
 };
 
 export const getWeekLabel = (weekOffset = 0): string => {
-  const today = new Date();
-  today.setDate(today.getDate() + weekOffset * 7);
-  const start = new Date(today);
-  start.setDate(today.getDate() - today.getDay());
+  const end = new Date();
+  end.setHours(0, 0, 0, 0);
+  end.setDate(end.getDate() + weekOffset * 7);
+  const start = new Date(end);
+  start.setDate(end.getDate() - 6);
 
-  return `Week of ${start.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}`;
+  if (weekOffset === 0) {
+    return "Last 7 days";
+  }
+
+  return `${start.toLocaleDateString(undefined, { month: "short", day: "numeric" })} – ${end.toLocaleDateString(undefined, { month: "short", day: "numeric" })}`;
 };
 
 export const computeStreak = (sessions: SessionRecord[]): number => {
