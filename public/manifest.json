@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Forge",
-  "version": "0.2.0",
-  "description": "Cursor-themed focus timer. Sessions, streaks, sound, and account sync across Chrome profiles.",
+  "name": "Lahza",
+  "version": "0.4.0",
+  "description": "A focus timer for Chrome. Deep work, a short rest, and a longer pause after four rounds. Optional account sync across profiles.",
   "permissions": ["storage", "alarms", "notifications", "offscreen"],
   "host_permissions": ["https://tiopzxojmnortiwbgfrx.supabase.co/*"],
   "background": {
@@ -16,7 +16,7 @@
     "128": "icon-128.png"
   },
   "action": {
-    "default_title": "Forge",
+    "default_title": "Lahza — focus timer",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icon-16.png",
@@ -31,10 +31,10 @@
       "suggested_key": {
         "default": "Alt+Shift+P"
       },
-      "description": "Start or pause the Forge timer"
+      "description": "Start or pause the Lahza focus timer"
     },
     "skip-session": {
-      "description": "Skip to the next Forge session"
+      "description": "Skip to the next Lahza session"
     }
   }
 }

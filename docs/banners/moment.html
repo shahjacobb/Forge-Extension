@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Lahza — Moment</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        background: #2f2a24;
+      }
+
+      .artboard {
+        width: 1600px;
+        height: 720px;
+        background:
+          radial-gradient(circle at 72% 48%, rgba(226, 211, 182, 0.08), transparent 34%),
+          #352f28;
+        color: #f0e4d0;
+        overflow: hidden;
+        position: relative;
+        font-family: "Noto Serif", Georgia, serif;
+      }
+
+      .arabic {
+        position: absolute;
+        right: 72px;
+        top: 50%;
+        transform: translateY(-52%);
+        font-family: "Noto Kufi Arabic", "Noto Naskh Arabic", serif;
+        font-size: 340px;
+        line-height: 0.8;
+        color: rgba(240, 228, 208, 0.14);
+        pointer-events: none;
+      }
+
+      .copy {
+        position: relative;
+        z-index: 1;
+        height: 720px;
+        padding: 96px 96px 88px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        max-width: 860px;
+      }
+
+      .kicker {
+        font-family: "Source Sans 3", sans-serif;
+        font-size: 12px;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: #cbb89a;
+        margin-bottom: 20px;
+      }
+
+      h1 {
+        margin: 0;
+        font-family: "Noto Serif Display", "Noto Serif", Georgia, serif;
+        font-size: 96px;
+        font-weight: 400;
+        letter-spacing: -0.045em;
+        line-height: 0.9;
+      }
+
+      .word {
+        margin-top: 10px;
+        font-family: "Noto Naskh Arabic", serif;
+        font-size: 48px;
+        color: #e7d5b6;
+      }
+
+      .lede {
+        margin: 36px 0 0;
+        max-width: 520px;
+        font-size: 26px;
+        line-height: 1.4;
+        color: #ead9c0;
+      }
+
+      .foot {
+        margin-top: 40px;
+        font-family: "Source Sans 3", sans-serif;
+        font-size: 15px;
+        letter-spacing: 0.06em;
+        color: #c4b49a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="artboard">
+      <div class="arabic" lang="ar" dir="rtl">لحظة</div>
+      <div class="copy">
+        <div class="kicker">A focus timer for Chrome</div>
+        <h1>Lahza</h1>
+        <div class="word" lang="ar" dir="rtl">لحظة</div>
+        <p class="lede">A moment, held. Deep work, then rest. After four rounds, a longer pause.</p>
+        <p class="foot">Said LAH-zah · earth, clay, dry stone</p>
+      </div>
+    </div>
+  </body>
+</html>

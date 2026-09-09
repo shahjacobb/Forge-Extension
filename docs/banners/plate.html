@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Lahza — Plate</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        background: #d7cbb8;
+      }
+
+      .artboard {
+        width: 1600px;
+        height: 720px;
+        background: #efe6d4;
+        color: #1e1812;
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        overflow: hidden;
+        font-family: "Source Sans 3", "Segoe UI", sans-serif;
+      }
+
+      .copy {
+        padding: 80px 48px 72px 88px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border-right: 1px solid #1e1812;
+      }
+
+      .kicker {
+        font-size: 13px;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: #1e1812;
+        margin-bottom: 28px;
+      }
+
+      h1 {
+        margin: 0;
+        font-family: "Noto Serif Display", "Noto Serif", Georgia, serif;
+        font-size: 118px;
+        font-weight: 600;
+        letter-spacing: -0.05em;
+        line-height: 0.8;
+        color: #1e1812;
+      }
+
+      .arabic {
+        margin-top: 16px;
+        font-family: "Noto Naskh Arabic", serif;
+        font-size: 44px;
+        color: #1e1812;
+      }
+
+      .rule {
+        width: 72px;
+        height: 2px;
+        background: #1e1812;
+        margin: 36px 0 28px;
+      }
+
+      .lede {
+        margin: 0;
+        max-width: 560px;
+        font-family: "Noto Serif", Georgia, serif;
+        font-size: 28px;
+        line-height: 1.35;
+        color: #1e1812;
+      }
+
+      .meta {
+        margin: 28px 0 0;
+        font-size: 15px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #4a3d32;
+      }
+
+      .stage {
+        display: grid;
+        place-items: center;
+        background: #1e1812;
+      }
+
+      .device {
+        width: 300px;
+        height: 500px;
+        background: #2a241e;
+        border: 2px solid #efe6d4;
+        border-radius: 8px;
+        padding: 26px 22px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        color: #efe6d4;
+      }
+
+      .device-top {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .ring {
+        width: 196px;
+        height: 196px;
+        border-radius: 50%;
+        background: conic-gradient(#efe6d4 0 80deg, #4a433a 80deg 360deg);
+        mask: radial-gradient(farthest-side, transparent calc(100% - 10px), #000 calc(100% - 9px));
+        -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 10px), #000 calc(100% - 9px));
+      }
+
+      .time {
+        margin-top: -138px;
+        text-align: center;
+      }
+
+      .time small {
+        display: block;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        font-size: 11px;
+        margin-bottom: 8px;
+        color: #c4b49a;
+      }
+
+      .time strong {
+        font-family: "DejaVu Sans Mono", ui-monospace, monospace;
+        font-size: 44px;
+        font-weight: 500;
+        letter-spacing: -0.06em;
+      }
+
+      .cta {
+        margin-top: auto;
+        width: 100%;
+        background: #efe6d4;
+        color: #1e1812;
+        text-align: center;
+        padding: 14px 12px;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="artboard">
+      <div class="copy">
+        <div class="kicker">Chrome extension</div>
+        <h1>Lahza</h1>
+        <div class="arabic" lang="ar" dir="rtl">لحظة</div>
+        <div class="rule"></div>
+        <p class="lede">A focus timer for deep work. The hour, then rest. After four, a longer pause.</p>
+        <p class="meta">Said LAH-zah · Arabic for a moment</p>
+      </div>
+      <div class="stage">
+        <div class="device">
+          <div class="device-top">
+            <span>Lahza</span>
+            <span>Focus</span>
+          </div>
+          <div class="ring"></div>
+          <div class="time">
+            <small>Focus</small>
+            <strong>24:12</strong>
+          </div>
+          <div class="cta">Start focus</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -22,7 +22,7 @@ shot() {
     --disable-dev-shm-usage \
     --no-first-run \
     --no-default-browser-check \
-    --user-data-dir="/tmp/forge-chrome-docs-$name" \
+    --user-data-dir="/tmp/lahza-chrome-docs-$name" \
     --force-device-scale-factor=2 \
     --window-size="$width,$height" \
     --virtual-time-budget=5000 \
@@ -31,7 +31,9 @@ shot() {
   echo "wrote $OUT/$name.png"
 }
 
-shot banner "$DOCS/docs/banner.html" 1600 720
+shot banner "$DOCS/docs/banners/field.html" 1600 720
+shot banner-plate "$DOCS/docs/banners/plate.html" 1600 720
+shot banner-moment "$DOCS/docs/banners/moment.html" 1600 720
 shot timer "$BASE/popup.html?shot=1&view=timer" 380 620
 shot running "$BASE/popup.html?shot=1&view=timer&running=1" 380 620
 shot activity "$BASE/popup.html?shot=1&view=activity" 380 620

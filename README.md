@@ -1,20 +1,62 @@
 <p align="center">
-  <img src="docs/shots/banner.png" alt="Forge — a Chrome focus timer" width="100%" />
+  <img src="docs/shots/banner.png" alt="Lahza — a focus timer for Chrome" width="100%" />
 </p>
 
-# Forge
+# Lahza
 
-A Chrome focus timer. Warm stone grays. Focus, short break, long break. Sessions and settings follow you across Chrome profiles when you sign in.
+**A focus timer for Chrome.** You work a block, you rest a little, and after four rounds you take a longer pause. Pin it to the toolbar. The badge keeps the remaining minutes while you look away from the clock.
 
-This is a **Chrome extension**, not an iPhone or Mac App Store app. Publishing goes through the [Chrome Web Store](https://chrome.google.com/webstore). There is no App Store deploy pipeline in this repo.
+*Lahza* (لحظة) is Arabic for a moment — said **LAH-zah**. Not a workshop name. Not a creed. The word for the span you are actually in.
+
+The face is earth: clay, dust, dry stone. It is meant to fall quiet against the page you are writing.
+
+![Using Lahza](docs/demo.gif)
+
+This is a **Chrome extension**. It is not an iPhone app, not a Mac app, and it does not go through the Apple App Store. You publish it on the [Chrome Web Store](https://chrome.google.com/webstore) — Google’s store for extensions.
 
 ---
 
-## Demo
+## Run it on your machine
 
-<video src="docs/demo.mp4" controls width="380"></video>
+You need [Node.js](https://nodejs.org/) (18 or newer) and Chrome.
 
-If the embed does not play, open [`docs/demo.mp4`](docs/demo.mp4).
+```bash
+git clone https://github.com/shahjacobb/Forge-Extension.git
+cd Forge-Extension
+npm install
+npm run build
+```
+
+Then load it:
+
+1. Open `chrome://extensions`
+2. Turn **Developer mode** on (top right)
+3. Click **Load unpacked**
+4. Choose the **`dist`** folder inside the repo — not the repo root, not `src`
+5. Pin **Lahza** on the toolbar
+
+That is the whole local setup. After you change code: `npm run build`, then **Reload** on the extension card.
+
+**Do not** use GitHub’s **Code → Download ZIP** as the thing you load or upload. That zip is source code (`src/`, README, etc.). Chrome needs the **built** extension in `dist/`.
+
+---
+
+## Banner studies
+
+Three HTML/CSS covers live in [`docs/banners/`](docs/banners/). The README uses **Field** (low contrast, same earth as the popup). **Plate** is high contrast for a store marquee. **Moment** leads with the Arabic.
+
+| Field (in use) | Plate (high contrast) | Moment |
+| --- | --- | --- |
+| <img src="docs/shots/banner.png" alt="Field banner" /> | <img src="docs/shots/banner-plate.png" alt="Plate banner" /> | <img src="docs/shots/banner-moment.png" alt="Moment banner" /> |
+
+To look at the HTML itself:
+
+```bash
+python3 -m http.server 5174
+# http://127.0.0.1:5174/docs/banners/field.html
+# http://127.0.0.1:5174/docs/banners/plate.html
+# http://127.0.0.1:5174/docs/banners/moment.html
+```
 
 ---
 
@@ -39,7 +81,7 @@ The popup has three tabs at the bottom.
 <img src="docs/shots/timer.png" alt="Idle focus timer" width="280" />
 <img src="docs/shots/running.png" alt="Focus in progress" width="280" />
 
-1. Open Forge from the toolbar.
+1. Open Lahza from the Chrome toolbar.
 2. Leave **Focus** selected (or switch to **Break** / **Long**).
 3. Press **Start focus**, or press **Space**.
 4. **Pause** holds the remaining time. **Resume** continues it.
@@ -85,56 +127,54 @@ Needs a `.env.local` with Supabase keys (see Development). Without keys, the tim
 
 ---
 
-## Install locally
+## Publish to the Chrome Web Store
+
+The store for Chrome extensions is the **Chrome Web Store**, via the [Developer Dashboard](https://chrome.google.com/webstore/devconsole). That is not the Apple App Store, not Google Play, and not a “download the repo zip” flow.
+
+### Make the zip (this is the file you upload)
+
+From the project root, after you have Node installed:
 
 ```bash
 npm install
-npm run build
+npm run package
 ```
 
-1. `chrome://extensions`
-2. Developer mode on
-3. **Load unpacked** → `dist/`
-4. Pin Forge on the toolbar
+That command builds the extension and writes **`lahza.zip`** next to `package.json`. Upload **that** file.
 
-After a code change: `npm run build`, then **Reload** the extension card.
+What `lahza.zip` is: the contents of `dist/` (manifest, HTML, scripts, icons).  
+What it is not: GitHub **Code → Download ZIP**. That download is the repository. The store will reject it, or Chrome will not treat it as an extension.
 
----
-
-## Publish to the Chrome Web Store
-
-No store deploy scripts live in this repo. You upload a zip by hand.
-
-### One-time
-
-1. Register as a [Chrome Web Store developer](https://chrome.google.com/webstore/devconsole). Google charges a one-time registration fee.
-2. If you use account sync, host a short privacy policy (email + session data via Supabase) and keep the URL. The store listing will ask for it.
-
-### Each release
-
-1. Confirm `public/manifest.json` `version` is newer than the last upload (`0.2.0` now).
-2. Build a clean package:
+If you prefer to zip by hand:
 
 ```bash
 npm run build
-cd dist && zip -r ../forge.zip .
+cd dist
+zip -r ../lahza.zip .
 ```
 
-3. Open the [Developer Dashboard](https://chrome.google.com/webstore/devconsole) → **New item** (or the existing item → **Package**).
-4. Upload `forge.zip`.
-5. Fill the store listing:
-   - Name: Forge
-   - Summary and description
-   - Category (Productivity)
-   - Screenshots: use `docs/shots/timer.png`, `running.png`, `activity.png`, `month.png`, `settings.png`, `complete.png` (store wants 1280×800 or 640×400 — scale these if the review form rejects the raw popup size)
+### One-time, as the publisher
+
+1. Pay the one-time [Chrome Web Store developer](https://chrome.google.com/webstore/devconsole) registration fee.
+2. If account sync is on, host a short privacy policy (email + session data via Supabase). The listing form asks for the URL.
+
+### Each release
+
+1. Bump `version` in `public/manifest.json` (it is `0.4.0` now).
+2. Run `npm run package`.
+3. Dashboard → **New item**, or the existing item → **Package**.
+4. Upload `lahza.zip`.
+5. Listing copy:
+   - Name: Lahza
+   - Summary: A focus timer for Chrome. Deep work, a short rest, a longer pause after four.
+   - Category: Productivity
+   - Screenshots: `docs/shots/timer.png`, `running.png`, `activity.png`, `month.png`, `settings.png`, `complete.png` (the store wants 1280×800 or 640×400 — scale these if the form rejects the raw popup size)
    - Small tile: `public/icon-128.png`
-   - Banner / marquee: `docs/shots/banner.png`
-6. Privacy: single purpose, remote host (`your-project.supabase.co` if sync is on), permission justifications for `storage`, `alarms`, `notifications`, `offscreen`.
-7. **Submit for review**. Review is usually a few days. You will get email when it is live or if they bounce it.
+   - Marquee: `docs/shots/banner.png` (Field). Use `banner-plate.png` if you want the high-contrast cover.
+6. Privacy: single purpose; remote host (`your-project.supabase.co` if sync is on); justify `storage`, `alarms`, `notifications`, `offscreen`.
+7. **Submit for review**. Google emails you when it is live or when they bounce it.
 
-Updates: bump `version`, rebuild the zip, upload a new package, submit again.
-
-This does **not** publish to the Apple App Store or Google Play. Those are different products. Forge is Chrome-only.
+Updates: bump `version`, `npm run package`, upload the new zip, submit again.
 
 ---
 
@@ -143,6 +183,7 @@ This does **not** publish to the Apple App Store or Google Play. Those are diffe
 ```bash
 npm install
 npm run build          # typecheck + dist/
+npm run package        # build + lahza.zip
 npm run preview        # Vite, open /popup.html
 npm run icons          # rebuild toolbar icons
 ```
@@ -164,6 +205,7 @@ To regenerate README images (optional, not a store deploy):
 npm run preview
 python3 -m http.server 5174
 ./scripts/capture-docs.sh
+node scripts/make-demo.mjs
 ```
 
 ---
@@ -177,6 +219,8 @@ src/popup         timer, activity, settings, account
 src/options       standalone settings page
 src/activity      standalone weekly view
 src/shared        types, storage, auth, analytics
-docs/shots        README screenshots and cover banner
+docs/banners      HTML/CSS cover studies
+docs/shots        README screenshots and banners
+docs/demo.gif     usage demo (GitHub renders this)
 public/           manifest + icons
 ```

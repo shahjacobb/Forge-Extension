@@ -27,7 +27,7 @@ const playSound = (chime: ChimeType, volume: number, enabled: boolean) => {
       await chrome.offscreen.createDocument({
         url: offscreenUrl,
         reasons: [chrome.offscreen.Reason.AUDIO_PLAYBACK],
-        justification: "Play Forge timer sounds"
+        justification: "Play Lahza timer sounds"
       });
     }
 

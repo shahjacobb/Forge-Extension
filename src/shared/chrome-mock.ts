@@ -4,6 +4,19 @@ import type { ChimeType, PersistedState, RuntimeMessage, TimerMode } from "./typ
 
 const memoryLocal = new Map<string, unknown>();
 const memorySync = new Map<string, unknown>();
+
+const previewDurationMs = (): number | null => {
+  if (typeof location === "undefined") {
+    return null;
+  }
+  const raw = new URLSearchParams(location.search).get("demoMs");
+  if (!raw) {
+    return null;
+  }
+  const value = Number(raw);
+  return Number.isFinite(value) && value > 0 ? value : null;
+};
+
 const demoSessions = () => {
   const now = new Date();
   now.setHours(18, 0, 0, 0);
@@ -23,12 +36,19 @@ const demoSessions = () => {
   });
 };
 
+const previewMs = previewDurationMs();
+
 let state = normalizeState({
   ...defaultState(),
   sessions: demoSessions(),
+  settings: {
+    ...defaultState().settings,
+    soundEnabled: previewMs ? false : defaultState().settings.soundEnabled
+  },
   timer: {
     ...defaultState().timer,
-    sessionCount: demoSessions().length
+    sessionCount: demoSessions().length,
+    remainingMs: previewMs ?? defaultState().timer.remainingMs
   }
 });
 const listeners = new Set<(message: unknown) => void>();
@@ -116,7 +136,7 @@ const handleMessage = async (message: RuntimeMessage): Promise<PersistedState> =
 
   if (message.type === "start") {
     const now = Date.now();
-    const durationMs = modeDurationMs(state.timer.mode, state.settings);
+    const durationMs = previewDurationMs() ?? modeDurationMs(state.timer.mode, state.settings);
     state = {
       ...state,
       timer: {
