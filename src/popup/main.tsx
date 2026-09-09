@@ -132,10 +132,17 @@ const chartTooltipStyle = {
   fontSize: 12
 };
 
+const previewParams = new URLSearchParams(typeof window === "undefined" ? "" : window.location.search);
+const previewView = ((): PopupView => {
+  const value = previewParams.get("view");
+  return value === "activity" || value === "settings" ? value : "timer";
+})();
+const previewActivity = previewParams.get("range") === "month" ? "monthly" : "weekly";
+
 const App = () => {
   const [state, setState] = React.useState<PersistedState | null>(null);
   const [now, setNow] = React.useState(Date.now());
-  const [view, setView] = React.useState<PopupView>("timer");
+  const [view, setView] = React.useState<PopupView>(previewView);
   const [settingsDraft, setSettingsDraft] = React.useState<TimerSettings | null>(null);
   const [authUser, setAuthUser] = React.useState<User | null>(null);
   const [profileName, setProfileName] = React.useState("");
@@ -151,7 +158,7 @@ const App = () => {
   const [completedMode, setCompletedMode] = React.useState<CompletedMode | null>(null);
   const [weekOffset, setWeekOffset] = React.useState(0);
   const [monthOffset, setMonthOffset] = React.useState(0);
-  const [activityMode, setActivityMode] = React.useState<"weekly" | "monthly">("weekly");
+  const [activityMode, setActivityMode] = React.useState<"weekly" | "monthly">(previewActivity);
   const prevSessions = React.useRef<number | null>(null);
 
   const refresh = React.useCallback(async () => {
@@ -176,7 +183,22 @@ const App = () => {
   }, []);
 
   React.useEffect(() => {
-    void refresh();
+    if (previewParams.has("shot")) {
+      document.documentElement.dataset.shot = "true";
+    }
+
+    void (async () => {
+      await refresh();
+      if (previewParams.get("running") === "1") {
+        const next = await sendMessage<PersistedState>({ type: "start" });
+        setState(next);
+      }
+      if (previewParams.get("modal") === "1") {
+        setCompletedMode(previewParams.get("milestone") === "1" ? "milestone" : "focus");
+        setView("timer");
+      }
+    })();
+
     const timer = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(timer);
   }, [refresh]);
