@@ -117,13 +117,7 @@ That writes **`lahza.zip`** next to `package.json`. Upload it in the [Developer 
 2. Pay the one-time registration fee if the dashboard asks
 3. **New item** (first time) or your item → **Package** (updates)
 4. Upload `lahza.zip`
-5. Fill in:
-   - Name: Lahza
-   - Summary: Customizable focus timer for Chrome. Classic Pomodoro, or set your own session lengths.
-   - Category: Productivity
-   - Screenshots: `docs/shots/timer.png`, `running.png`, `activity.png`, `month.png`, `settings.png`, `complete.png` (the form wants 1280×800 or 640×400)
-   - Small tile: `public/icon-128.png`
-   - Marquee: `docs/shots/banner.png`
+5. Fill in **Store listing** from `docs/store/listing.md`. Drop the images in `docs/store/` (they are already the sizes Google wants).
 6. Privacy: single purpose; add `your-project.supabase.co` if sync is on; justify `storage`, `alarms`, `notifications`, `offscreen`
 7. **Submit for review**
 
