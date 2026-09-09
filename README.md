@@ -18,7 +18,7 @@ This is a **Chrome extension**. It is not an iPhone app, not a Mac app, and it d
 
 ## Run it on your machine
 
-You need [Node.js](https://nodejs.org/) (18 or newer) and Chrome.
+You need [Node.js](https://nodejs.org/) (18 or newer) and desktop Chrome.
 
 ```bash
 git clone https://github.com/shahjacobb/Forge-Extension.git
@@ -37,7 +37,14 @@ Then load it:
 
 That is the whole local setup. After you change code: `npm run build`, then **Reload** on the extension card.
 
-**Do not** use GitHub’s **Code → Download ZIP** as the thing you load or upload. That zip is source code (`src/`, README, etc.). Chrome needs the **built** extension in `dist/`.
+### Do not install it these ways
+
+- **GitHub → Code → Download ZIP.** That zip is the source repo (README, `src/`, configs). Chrome cannot load it as an extension, and the Chrome Web Store will reject it.
+- **A “Chrome extension downloader” / CRX extractor.** Those extensions scrape `.crx` files out of the store. They are the wrong tool for this project, they skip review, and they are a common malware vector. This repo is not installed that way.
+- **Dragging a zip onto `chrome://extensions`.** Chrome wants an **unpacked folder** (`dist/`) for local testing, or a zip you built with `npm run package` for the store dashboard — not a GitHub zip, not a CRX from a downloader.
+
+To try it: clone, `npm run build`, Load unpacked → `dist/`.  
+To publish: `npm run package`, then upload **`lahza.zip`** in the [Chrome Web Store dashboard](https://chrome.google.com/webstore/devconsole).
 
 ---
 
