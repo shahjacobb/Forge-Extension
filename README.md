@@ -1,20 +1,18 @@
 <p align="center">
-  <img src="docs/shots/banner.png" alt="Forge — a Chrome focus timer" width="100%" />
+  <img src="docs/shots/banner.png" alt="Miqat — a focus timer for Chrome" width="100%" />
 </p>
 
-# Forge
+# Miqat
 
-A Chrome focus timer. Warm stone grays. Focus, short break, long break. Sessions and settings follow you across Chrome profiles when you sign in.
+**A focus timer for Chrome.** Deep-work blocks, short breaks, and a long break after four rounds. Pin it on the toolbar, start a session, and the badge counts down while you work.
 
-This is a **Chrome extension**, not an iPhone or Mac App Store app. Publishing goes through the [Chrome Web Store](https://chrome.google.com/webstore). There is no App Store deploy pipeline in this repo.
+In Arabic, a *miqat* (ميقات) is an appointed time — the station you cross when you intend to begin. The name is from that vocabulary of timekeeping, not from a workshop.
 
----
+The UI stays quiet: warm stone, no neon, so the clock stays out of the way.
 
-## Demo
+![Using Miqat](docs/demo.gif)
 
-<video src="docs/demo.mp4" controls width="380"></video>
-
-If the embed does not play, open [`docs/demo.mp4`](docs/demo.mp4).
+This is a **Chrome extension**, not an iPhone or Mac App Store app. Publishing goes through the [Chrome Web Store](https://chrome.google.com/webstore). There is no store deploy pipeline in this repo.
 
 ---
 
@@ -39,7 +37,7 @@ The popup has three tabs at the bottom.
 <img src="docs/shots/timer.png" alt="Idle focus timer" width="280" />
 <img src="docs/shots/running.png" alt="Focus in progress" width="280" />
 
-1. Open Forge from the toolbar.
+1. Open Miqat from the Chrome toolbar.
 2. Leave **Focus** selected (or switch to **Break** / **Long**).
 3. Press **Start focus**, or press **Space**.
 4. **Pause** holds the remaining time. **Resume** continues it.
@@ -95,7 +93,7 @@ npm run build
 1. `chrome://extensions`
 2. Developer mode on
 3. **Load unpacked** → `dist/`
-4. Pin Forge on the toolbar
+4. Pin Miqat on the toolbar
 
 After a code change: `npm run build`, then **Reload** the extension card.
 
@@ -112,19 +110,19 @@ No store deploy scripts live in this repo. You upload a zip by hand.
 
 ### Each release
 
-1. Confirm `public/manifest.json` `version` is newer than the last upload (`0.2.0` now).
+1. Confirm `public/manifest.json` `version` is newer than the last upload (`0.3.0` now).
 2. Build a clean package:
 
 ```bash
 npm run build
-cd dist && zip -r ../forge.zip .
+cd dist && zip -r ../miqat.zip .
 ```
 
 3. Open the [Developer Dashboard](https://chrome.google.com/webstore/devconsole) → **New item** (or the existing item → **Package**).
-4. Upload `forge.zip`.
+4. Upload `miqat.zip`.
 5. Fill the store listing:
-   - Name: Forge
-   - Summary and description
+   - Name: Miqat
+   - Summary: A focus timer for Chrome. Deep-work sessions, short breaks, a long break after four.
    - Category (Productivity)
    - Screenshots: use `docs/shots/timer.png`, `running.png`, `activity.png`, `month.png`, `settings.png`, `complete.png` (store wants 1280×800 or 640×400 — scale these if the review form rejects the raw popup size)
    - Small tile: `public/icon-128.png`
@@ -134,7 +132,7 @@ cd dist && zip -r ../forge.zip .
 
 Updates: bump `version`, rebuild the zip, upload a new package, submit again.
 
-This does **not** publish to the Apple App Store or Google Play. Those are different products. Forge is Chrome-only.
+This does **not** publish to the Apple App Store or Google Play. Those are different products. Miqat is Chrome-only.
 
 ---
 
@@ -164,6 +162,7 @@ To regenerate README images (optional, not a store deploy):
 npm run preview
 python3 -m http.server 5174
 ./scripts/capture-docs.sh
+node scripts/make-demo.mjs
 ```
 
 ---
@@ -178,5 +177,6 @@ src/options       standalone settings page
 src/activity      standalone weekly view
 src/shared        types, storage, auth, analytics
 docs/shots        README screenshots and cover banner
+docs/demo.gif     usage demo (GitHub renders this)
 public/           manifest + icons
 ```
