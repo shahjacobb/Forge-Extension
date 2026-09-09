@@ -31,7 +31,7 @@ Lahza (لحظة) is said LAH-zah.
 
 Images (JPEG or 24-bit PNG, no alpha):
 
-- Store icon 128×128: `icon-128.png`
+- Store icon 128×128 (24-bit PNG, no alpha): `icon-128.png`
 - Screenshots 1280×800 (up to 5): `screenshot-timer.png`, `screenshot-running.png`, `screenshot-activity.png`, `screenshot-settings.png`, `screenshot-complete.png`
 - Small promo tile 440×280: `small-tile.png`
 - Marquee 1400×560: `marquee.png`
