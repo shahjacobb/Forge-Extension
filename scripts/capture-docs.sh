@@ -25,7 +25,7 @@ shot() {
     --user-data-dir="/tmp/sukoon-chrome-docs-$name" \
     --force-device-scale-factor=2 \
     --window-size="$width,$height" \
-    --virtual-time-budget=5000 \
+    --virtual-time-budget=8000 \
     --screenshot="$OUT/$name.png" \
     "$url" >/dev/null
   echo "wrote $OUT/$name.png"

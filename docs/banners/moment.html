@@ -14,25 +14,36 @@
         width: 1600px;
         height: 720px;
         background: #58564f;
-        color: #d4d1c8;
+        color: #f0ece4;
         display: grid;
-        grid-template-columns: 1.15fr 0.85fr;
+        grid-template-columns: minmax(0, 1fr) 420px;
         overflow: hidden;
         position: relative;
-        font-family: "Source Sans 3", "Segoe UI", sans-serif;
+        font-family: "Noto Serif", Georgia, "Times New Roman", serif;
       }
 
+      /* One Arabic mark, gutter only — never under the English copy. */
       .mark {
         position: absolute;
-        left: 72px;
-        top: 50%;
-        transform: translateY(-48%);
-        font-family: "Noto Kufi Arabic", "Noto Naskh Arabic", serif;
-        font-size: 240px;
-        line-height: 0.85;
-        color: rgba(212, 209, 200, 0.11);
+        left: 720px;
+        right: 420px;
+        top: 0;
+        bottom: 0;
+        overflow: hidden;
+        display: grid;
+        place-items: center;
         pointer-events: none;
         z-index: 0;
+      }
+
+      .mark span {
+        font-family: "Noto Naskh Arabic", serif;
+        font-size: 132px;
+        font-weight: 400;
+        line-height: 1;
+        color: #8a8176;
+        opacity: 0.5;
+        white-space: nowrap;
       }
 
       .copy,
@@ -42,44 +53,40 @@
       }
 
       .copy {
-        padding: 88px 48px 80px 96px;
+        padding: 88px 56px 80px 96px;
         display: flex;
         flex-direction: column;
         justify-content: center;
       }
 
       .kicker {
-        font-size: 13px;
-        letter-spacing: 0.22em;
+        font-family: "Noto Serif", Georgia, serif;
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: #c9c3b4;
-        margin-bottom: 20px;
+        color: #f2eee6;
+        margin-bottom: 22px;
       }
 
       h1 {
         margin: 0;
         font-family: "Noto Serif Display", "Noto Serif", Georgia, serif;
         font-size: 92px;
-        font-weight: 400;
-        letter-spacing: -0.04em;
-        line-height: 0.88;
-        color: #d4d1c8;
-      }
-
-      .arabic {
-        margin-top: 10px;
-        font-family: "Noto Naskh Arabic", serif;
-        font-size: 28px;
-        color: #c9c3b4;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 0.9;
+        color: #f7f4ee;
       }
 
       .lede {
         margin: 28px 0 0;
-        max-width: 520px;
+        max-width: 560px;
         font-family: "Noto Serif", Georgia, serif;
-        font-size: 22px;
+        font-size: 23px;
+        font-weight: 600;
         line-height: 1.45;
-        color: #b3b0a6;
+        color: #f0ece4;
       }
 
       .pills {
@@ -89,18 +96,21 @@
       }
 
       .pills span {
-        border: 1px solid #706e65;
+        border: 1px solid #7a776f;
         background: #64625a;
-        color: #d4d1c8;
+        color: #f0ece4;
         border-radius: 999px;
-        padding: 8px 14px;
-        font-size: 13px;
-        letter-spacing: 0.04em;
+        padding: 8px 16px;
+        font-family: "Noto Serif", Georgia, serif;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.01em;
       }
 
       .stage {
         display: grid;
         place-items: center;
+        padding-right: 72px;
       }
 
       .device {
@@ -116,6 +126,7 @@
         align-items: center;
         gap: 16px;
         box-shadow: 0 24px 60px rgba(28, 26, 22, 0.28);
+        font-family: Inter, "Segoe UI", system-ui, sans-serif;
       }
 
       .device-top {
@@ -132,7 +143,7 @@
         border-radius: 50%;
         background: conic-gradient(#c9c3b4 0 80deg, #6a685f 80deg 360deg);
         mask: radial-gradient(farthest-side, transparent calc(100% - 9px), #000 calc(100% - 8px));
-        -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 9px), #000 calc(100% - 8px));
+        -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 8px));
       }
 
       .time {
@@ -150,7 +161,7 @@
       }
 
       .time strong {
-        font-family: "DejaVu Sans Mono", ui-monospace, monospace;
+        font-family: "JetBrains Mono", "DejaVu Sans Mono", ui-monospace, monospace;
         font-size: 44px;
         font-weight: 500;
         letter-spacing: -0.06em;
@@ -166,23 +177,23 @@
         text-align: center;
         padding: 13px 12px;
         font-size: 15px;
+        font-weight: 500;
       }
     </style>
   </head>
   <body>
     <div class="artboard">
-      <div class="mark" lang="ar" dir="rtl" aria-hidden="true">سكون</div>
+      <div class="mark" aria-hidden="true"><span lang="ar" dir="rtl">سكون</span></div>
       <div class="copy">
-        <div class="kicker">A focus timer for Chrome</div>
+        <div class="kicker">A Chrome timer for focus sessions</div>
         <h1>Sukoon</h1>
-        <div class="arabic" lang="ar" dir="rtl">سكون</div>
         <p class="lede">
-          Focus sessions for deep work. A block in the toolbar, a short rest, a longer pause after four.
+          A Pomodoro timer for Chrome. Work 25 minutes, rest 5. After four sessions, take a longer break.
         </p>
         <div class="pills">
-          <span>Timer</span>
-          <span>Activity</span>
-          <span>Settings</span>
+          <span>Focus</span>
+          <span>Break</span>
+          <span>Long break</span>
         </div>
       </div>
       <div class="stage">
