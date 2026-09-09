@@ -19,8 +19,8 @@ This is a **Chrome extension**. It does not go on the Apple App Store or Google 
 You need [Node.js](https://nodejs.org/) 18+ and the Chrome desktop browser.
 
 ```bash
-git clone https://github.com/shahjacobb/Forge-Extension.git
-cd Forge-Extension
+git clone https://github.com/shahjacobb/Sukoon-Extension.git
+cd Sukoon-Extension
 npm install
 npm run build
 ```
