@@ -50,7 +50,9 @@ type CompletedMode = TimerMode | "milestone";
 const Mark = () => (
   <span className="mark" aria-hidden="true">
     <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-      <path d="M2 1.5h6.2L4.4 6.2H7.8L3.1 10.8 5.2 6.8H2.4L5.6 1.5H2z" fill="currentColor" />
+      <circle cx="6" cy="6.2" r="4.1" stroke="currentColor" strokeWidth="1.35" />
+      <path d="M6 6.2V3.7" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" />
+      <path d="M6 1.4v1.1" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
     </svg>
   </span>
 );
@@ -133,6 +135,7 @@ const chartTooltipStyle = {
 };
 
 const previewParams = new URLSearchParams(typeof window === "undefined" ? "" : window.location.search);
+const previewDemoMs = Number(previewParams.get("demoMs"));
 const previewView = ((): PopupView => {
   const value = previewParams.get("view");
   return value === "activity" || value === "settings" ? value : "timer";
@@ -203,6 +206,14 @@ const App = () => {
     return () => window.clearInterval(timer);
   }, [refresh]);
 
+  React.useEffect(() => {
+    if (state?.timer.status !== "running") {
+      return;
+    }
+    const poll = window.setInterval(() => void refresh(), 1000);
+    return () => window.clearInterval(poll);
+  }, [state?.timer.status, refresh]);
+
   const settingsSignature = state ? JSON.stringify(state.settings) : "";
 
   React.useEffect(() => {
@@ -267,18 +278,19 @@ const App = () => {
   }, [state?.timer.status]);
 
   if (!state) {
-    return <main className="app loading">Preparing Forge</main>;
+    return <main className="app loading">Preparing Sukoon</main>;
   }
 
   const remainingMs =
     state.timer.status === "running" && state.timer.endsAt
       ? Math.max(0, state.timer.endsAt - now)
       : state.timer.remainingMs;
-  const totalMs = Math.max(1, (state.timer.mode === "focus"
+  const scheduledMs = Math.max(1, (state.timer.mode === "focus"
     ? state.settings.focusMinutes
     : state.timer.mode === "longBreak"
       ? state.settings.longBreakMinutes
       : state.settings.breakMinutes) * 60_000);
+  const totalMs = Number.isFinite(previewDemoMs) && previewDemoMs > 0 ? previewDemoMs : scheduledMs;
   const progressPct = state.timer.status === "idle" ? 0 : Math.max(0, Math.min(100, ((totalMs - remainingMs) / totalMs) * 100));
   const currentWeekData = buildWeeklyData(state.sessions);
   const focusToday = currentWeekData.at(-1)?.minutes ?? 0;
@@ -435,7 +447,7 @@ const App = () => {
           <div className="brand">
             <Mark />
             <div className="brand-copy">
-              <div className="brand-name">Forge</div>
+              <div className="brand-name">Sukoon</div>
               <div className="brand-sub">
                 {greetingName ? `Good focus, ${greetingName}` : formatDate(new Date(now))}
               </div>
@@ -759,7 +771,7 @@ const App = () => {
             <section className="account-card">
               <div className="account-header">
                 <span className="stat-label">Account</span>
-                <h2>{authUser ? "Synced across Chrome profiles" : "Use Forge on every profile"}</h2>
+                <h2>{authUser ? "Synced across Chrome profiles" : "Use Sukoon on every profile"}</h2>
                 <p className="lede">
                   {cloudConfigured
                     ? "The same email unlocks your sessions and settings on work, personal, or guest Chrome."

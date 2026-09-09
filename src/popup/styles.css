@@ -43,6 +43,10 @@ html[data-shot] body {
   min-height: 100vh;
 }
 
+html[data-shot] .app {
+  min-height: 100vh;
+}
+
 body {
   margin: 0 auto;
   min-width: 360px;
