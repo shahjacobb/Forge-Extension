@@ -1,16 +1,16 @@
 <p align="center">
-  <img src="docs/shots/banner.png" alt="Lahza — a focus timer for Chrome" width="100%" />
+  <img src="docs/shots/banner.png" alt="Sukoon — a focus timer for Chrome" width="100%" />
 </p>
 
-# Lahza
+# Sukoon
 
-**A focus timer for Chrome.** You work a block, you rest a little, and after four rounds you take a longer pause. Pin it to the toolbar. The badge keeps the remaining minutes while you look away from the clock.
+**A focus timer for Chrome.** Focus sessions for deep work: you work a block, you rest a little, and after four rounds you take a longer pause. Pin it to the toolbar. The badge keeps the remaining minutes while you look away from the clock.
 
-*Lahza* (لحظة) is Arabic for a moment — said **LAH-zah**. Not a workshop name. Not a creed. The word for the span you are actually in.
+*Sukoon* (سكون) is Arabic for stillness — said **soo-KOON**. The quiet you enter to work.
 
-The face is earth: clay, dust, dry stone. It is meant to fall quiet against the page you are writing.
+The face matches the clock: clay, dust, dry stone.
 
-![Using Lahza](docs/demo.gif)
+![Using Sukoon](docs/demo.gif)
 
 This is a **Chrome extension**. It is not an iPhone app, not a Mac app, and it does not go through the Apple App Store. You publish it on the [Chrome Web Store](https://chrome.google.com/webstore) — Google’s store for extensions.
 
@@ -33,7 +33,7 @@ Then load it:
 2. Turn **Developer mode** on (top right)
 3. Click **Load unpacked**
 4. Choose the **`dist`** folder inside the repo — not the repo root, not `src`
-5. Pin **Lahza** on the toolbar
+5. Pin **Sukoon** on the toolbar
 
 That is the whole local setup. After you change code: `npm run build`, then **Reload** on the extension card.
 
@@ -43,27 +43,8 @@ That is the whole local setup. After you change code: `npm run build`, then **Re
 - **A “Chrome extension downloader” / CRX extractor.** Those extensions scrape `.crx` files out of the store. They are the wrong tool for this project, they skip review, and they are a common malware vector. This repo is not installed that way.
 - **Dragging a zip onto `chrome://extensions`.** Chrome wants an **unpacked folder** (`dist/`) for local testing, or a zip you built with `npm run package` for the store dashboard — not a GitHub zip, not a CRX from a downloader.
 
-To try it: clone, `npm run build`, Load unpacked → `dist/`.  
-To publish: `npm run package`, then upload **`lahza.zip`** in the [Chrome Web Store dashboard](https://chrome.google.com/webstore/devconsole).
-
----
-
-## Banner studies
-
-Three HTML/CSS covers live in [`docs/banners/`](docs/banners/). The README uses **Field** (low contrast, same earth as the popup). **Plate** is high contrast for a store marquee. **Moment** leads with the Arabic.
-
-| Field (in use) | Plate (high contrast) | Moment |
-| --- | --- | --- |
-| <img src="docs/shots/banner.png" alt="Field banner" /> | <img src="docs/shots/banner-plate.png" alt="Plate banner" /> | <img src="docs/shots/banner-moment.png" alt="Moment banner" /> |
-
-To look at the HTML itself:
-
-```bash
-python3 -m http.server 5174
-# http://127.0.0.1:5174/docs/banners/field.html
-# http://127.0.0.1:5174/docs/banners/plate.html
-# http://127.0.0.1:5174/docs/banners/moment.html
-```
+To try it: clone, `npm run build`, Load unpacked → `dist/`.
+To publish: `npm run package`, then upload **`sukoon.zip`** in the [Chrome Web Store dashboard](https://chrome.google.com/webstore/devconsole).
 
 ---
 
@@ -88,7 +69,7 @@ The popup has three tabs at the bottom.
 <img src="docs/shots/timer.png" alt="Idle focus timer" width="280" />
 <img src="docs/shots/running.png" alt="Focus in progress" width="280" />
 
-1. Open Lahza from the Chrome toolbar.
+1. Open Sukoon from the Chrome toolbar.
 2. Leave **Focus** selected (or switch to **Break** / **Long**).
 3. Press **Start focus**, or press **Space**.
 4. **Pause** holds the remaining time. **Resume** continues it.
@@ -147,9 +128,9 @@ npm install
 npm run package
 ```
 
-That command builds the extension and writes **`lahza.zip`** next to `package.json`. Upload **that** file.
+That command builds the extension and writes **`sukoon.zip`** next to `package.json`. Upload **that** file.
 
-What `lahza.zip` is: the contents of `dist/` (manifest, HTML, scripts, icons).  
+What `sukoon.zip` is: the contents of `dist/` (manifest, HTML, scripts, icons).
 What it is not: GitHub **Code → Download ZIP**. That download is the repository. The store will reject it, or Chrome will not treat it as an extension.
 
 If you prefer to zip by hand:
@@ -157,7 +138,7 @@ If you prefer to zip by hand:
 ```bash
 npm run build
 cd dist
-zip -r ../lahza.zip .
+zip -r ../sukoon.zip .
 ```
 
 ### One-time, as the publisher
@@ -167,17 +148,17 @@ zip -r ../lahza.zip .
 
 ### Each release
 
-1. Bump `version` in `public/manifest.json` (it is `0.4.0` now).
+1. Bump `version` in `public/manifest.json` (it is `0.5.0` now).
 2. Run `npm run package`.
 3. Dashboard → **New item**, or the existing item → **Package**.
-4. Upload `lahza.zip`.
+4. Upload `sukoon.zip`.
 5. Listing copy:
-   - Name: Lahza
-   - Summary: A focus timer for Chrome. Deep work, a short rest, a longer pause after four.
+   - Name: Sukoon
+   - Summary: A focus timer for Chrome. Focus sessions for deep work, a short rest, a longer pause after four.
    - Category: Productivity
    - Screenshots: `docs/shots/timer.png`, `running.png`, `activity.png`, `month.png`, `settings.png`, `complete.png` (the store wants 1280×800 or 640×400 — scale these if the form rejects the raw popup size)
    - Small tile: `public/icon-128.png`
-   - Marquee: `docs/shots/banner.png` (Field). Use `banner-plate.png` if you want the high-contrast cover.
+   - Marquee: `docs/shots/banner.png`
 6. Privacy: single purpose; remote host (`your-project.supabase.co` if sync is on); justify `storage`, `alarms`, `notifications`, `offscreen`.
 7. **Submit for review**. Google emails you when it is live or when they bounce it.
 
@@ -190,7 +171,7 @@ Updates: bump `version`, `npm run package`, upload the new zip, submit again.
 ```bash
 npm install
 npm run build          # typecheck + dist/
-npm run package        # build + lahza.zip
+npm run package        # build + sukoon.zip
 npm run preview        # Vite, open /popup.html
 npm run icons          # rebuild toolbar icons
 ```
@@ -226,8 +207,8 @@ src/popup         timer, activity, settings, account
 src/options       standalone settings page
 src/activity      standalone weekly view
 src/shared        types, storage, auth, analytics
-docs/banners      HTML/CSS cover studies
-docs/shots        README screenshots and banners
+docs/banners      HTML/CSS cover
+docs/shots        README screenshots and banner
 docs/demo.gif     usage demo (GitHub renders this)
 public/           manifest + icons
 ```

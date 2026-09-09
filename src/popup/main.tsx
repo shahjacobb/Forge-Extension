@@ -278,7 +278,7 @@ const App = () => {
   }, [state?.timer.status]);
 
   if (!state) {
-    return <main className="app loading">Preparing Lahza</main>;
+    return <main className="app loading">Preparing Sukoon</main>;
   }
 
   const remainingMs =
@@ -447,7 +447,7 @@ const App = () => {
           <div className="brand">
             <Mark />
             <div className="brand-copy">
-              <div className="brand-name">Lahza</div>
+              <div className="brand-name">Sukoon</div>
               <div className="brand-sub">
                 {greetingName ? `Good focus, ${greetingName}` : formatDate(new Date(now))}
               </div>
@@ -771,7 +771,7 @@ const App = () => {
             <section className="account-card">
               <div className="account-header">
                 <span className="stat-label">Account</span>
-                <h2>{authUser ? "Synced across Chrome profiles" : "Use Lahza on every profile"}</h2>
+                <h2>{authUser ? "Synced across Chrome profiles" : "Use Sukoon on every profile"}</h2>
                 <p className="lede">
                   {cloudConfigured
                     ? "The same email unlocks your sessions and settings on work, personal, or guest Chrome."

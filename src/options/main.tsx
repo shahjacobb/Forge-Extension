@@ -29,11 +29,11 @@ const App = () => {
     })) as PersistedState;
     setState(nextState);
     setDraft(nextState.settings);
-    setNotice("Saved. Open Lahza on another Chrome profile and sign in to take these with you.");
+    setNotice("Saved. Open Sukoon on another Chrome profile and sign in to take these with you.");
   };
 
   if (!state || !draft) {
-    return <main className="settings-shell">Loading Lahza settings…</main>;
+    return <main className="settings-shell">Loading Sukoon settings…</main>;
   }
 
   const patch = (partial: Partial<TimerSettings>) => setDraft((current) => ({ ...(current ?? state.settings), ...partial }));
@@ -42,7 +42,7 @@ const App = () => {
     <main className="settings-shell">
       <section className="settings-card">
         <header>
-          <div className="eyebrow">Lahza</div>
+          <div className="eyebrow">Sukoon</div>
           <h1>Settings</h1>
           <p>Timer lengths and sound for this Chrome profile.</p>
         </header>

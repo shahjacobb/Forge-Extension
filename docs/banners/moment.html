@@ -2,21 +2,21 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Lahza — Moment</title>
+    <title>Sukoon</title>
     <style>
       html,
       body {
         margin: 0;
-        background: #2f2a24;
+        background: #58564f;
       }
 
       .artboard {
         width: 1600px;
         height: 720px;
         background:
-          radial-gradient(circle at 72% 48%, rgba(226, 211, 182, 0.08), transparent 34%),
-          #352f28;
-        color: #f0e4d0;
+          radial-gradient(circle at 74% 46%, rgba(201, 195, 180, 0.1), transparent 38%),
+          #58564f;
+        color: #d4d1c8;
         overflow: hidden;
         position: relative;
         font-family: "Noto Serif", Georgia, serif;
@@ -24,13 +24,13 @@
 
       .arabic {
         position: absolute;
-        right: 72px;
+        right: 48px;
         top: 50%;
         transform: translateY(-52%);
         font-family: "Noto Kufi Arabic", "Noto Naskh Arabic", serif;
-        font-size: 340px;
+        font-size: 360px;
         line-height: 0.8;
-        color: rgba(240, 228, 208, 0.14);
+        color: rgba(212, 209, 200, 0.16);
         pointer-events: none;
       }
 
@@ -38,20 +38,20 @@
         position: relative;
         z-index: 1;
         height: 720px;
-        padding: 96px 96px 88px;
+        padding: 88px 96px;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        max-width: 860px;
+        max-width: 900px;
       }
 
       .kicker {
-        font-family: "Source Sans 3", sans-serif;
-        font-size: 12px;
-        letter-spacing: 0.3em;
+        font-family: "Source Sans 3", "Segoe UI", sans-serif;
+        font-size: 18px;
+        letter-spacing: 0.16em;
         text-transform: uppercase;
-        color: #cbb89a;
-        margin-bottom: 20px;
+        color: #c9c3b4;
+        margin-bottom: 22px;
       }
 
       h1 {
@@ -61,41 +61,49 @@
         font-weight: 400;
         letter-spacing: -0.045em;
         line-height: 0.9;
+        color: #d4d1c8;
       }
 
       .word {
-        margin-top: 10px;
+        margin-top: 12px;
         font-family: "Noto Naskh Arabic", serif;
-        font-size: 48px;
-        color: #e7d5b6;
+        font-size: 44px;
+        color: #c9c3b4;
       }
 
       .lede {
-        margin: 36px 0 0;
-        max-width: 520px;
+        margin: 32px 0 0;
+        max-width: 560px;
         font-size: 26px;
         line-height: 1.4;
-        color: #ead9c0;
+        color: #d4d1c8;
+      }
+
+      .lede strong {
+        font-weight: 600;
       }
 
       .foot {
-        margin-top: 40px;
-        font-family: "Source Sans 3", sans-serif;
-        font-size: 15px;
-        letter-spacing: 0.06em;
-        color: #c4b49a;
+        margin-top: 36px;
+        font-family: "Source Sans 3", "Segoe UI", sans-serif;
+        font-size: 16px;
+        letter-spacing: 0.04em;
+        color: #b3b0a6;
       }
     </style>
   </head>
   <body>
     <div class="artboard">
-      <div class="arabic" lang="ar" dir="rtl">لحظة</div>
+      <div class="arabic" lang="ar" dir="rtl">سكون</div>
       <div class="copy">
         <div class="kicker">A focus timer for Chrome</div>
-        <h1>Lahza</h1>
-        <div class="word" lang="ar" dir="rtl">لحظة</div>
-        <p class="lede">A moment, held. Deep work, then rest. After four rounds, a longer pause.</p>
-        <p class="foot">Said LAH-zah · earth, clay, dry stone</p>
+        <h1>Sukoon</h1>
+        <div class="word" lang="ar" dir="rtl">سكون</div>
+        <p class="lede">
+          <strong>Focus sessions for deep work.</strong>
+          A block in the toolbar, a short rest, a longer pause after four.
+        </p>
+        <p class="foot">Said soo-KOON · Arabic for stillness</p>
       </div>
     </div>
   </body>
