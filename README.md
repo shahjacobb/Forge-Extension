@@ -1,43 +1,33 @@
 <p align="center">
-  <img src="docs/shots/banner.png" alt="Sukoon — a Pomodoro timer for Chrome" width="100%" />
+  <img src="docs/shots/banner.png" alt="Still — a Pomodoro timer for Chrome" width="100%" />
 </p>
 
-# Sukoon
+# Still
 
 **A Pomodoro timer for Chrome.** You work for 25 minutes, rest for 5, and after four sessions you take a longer break. Pin it on the toolbar. While it runs, the icon shows how much time you have left.
 
-*Sukoon* (سكون) is Arabic for stillness — said **soo-KOON**.
-
-![Using Sukoon](docs/demo.gif)
+![Using Still](docs/demo.gif)
 
 ---
 
-## Setup (use it on your computer)
+## Setup
 
-You need [Node.js](https://nodejs.org/) 18+ and the Chrome desktop browser.
+You need [Node.js](https://nodejs.org/) 18+ and Chrome.
 
 ```bash
-git clone https://github.com/shahjacobb/Sukoon-Extension.git
-cd Sukoon-Extension
+git clone https://github.com/shahjacobb/Forge-Extension.git
+cd Forge-Extension
 npm install
 npm run build
 ```
 
-Then:
-
-1. In Chrome, open `chrome://extensions`
-2. Turn on **Developer mode** (top right)
+1. Open `chrome://extensions`
+2. Turn on **Developer mode**
 3. Click **Load unpacked**
-4. Select the **`dist`** folder (the one inside this repo, next to `package.json`)
-5. Pin **Sukoon** on the toolbar
+4. Select the **`dist`** folder next to `package.json`
+5. Pin **Still**
 
-If you change the code later: run `npm run build` again, then click **Reload** on the extension card.
-
-### Do not do these
-
-- **GitHub → Code → Download ZIP.** That is the source code. Chrome will not treat it as an extension.
-- **A CRX / “Chrome extension downloader.”** Do not install this project that way.
-- **Dropping a zip onto `chrome://extensions`.** For local testing, load the **folder** `dist/`. For the public store, upload the zip from `npm run package` (see below).
+After you change the code, run `npm run build` and click **Reload** on the extension card.
 
 ---
 
@@ -62,7 +52,7 @@ The popup has three tabs at the bottom.
 <img src="docs/shots/timer.png" alt="Idle focus timer" width="280" />
 <img src="docs/shots/running.png" alt="Focus in progress" width="280" />
 
-1. Open Sukoon from the Chrome toolbar.
+1. Open Still from the Chrome toolbar.
 2. Leave **Focus** selected (or switch to **Break** / **Long**).
 3. Press **Start focus**, or press **Space**.
 4. **Pause** holds the remaining time. **Resume** continues it.
@@ -110,48 +100,35 @@ Needs a `.env.local` with Supabase keys (see Development). Without keys, the tim
 
 ## Chrome Web Store
 
-Build `sukoon.zip` and upload it in the [Developer Dashboard](https://chrome.google.com/webstore/devconsole).
-
-### 1. Make the zip
-
-In the project folder:
-
 ```bash
 npm install
 npm run package
 ```
 
-That creates **`sukoon.zip`** next to `package.json`. That file is what Google wants.
+That writes **`still.zip`** next to `package.json`. Upload it in the [Developer Dashboard](https://chrome.google.com/webstore/devconsole).
 
-### 2. One-time account
-
-1. Open the [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole)
-2. Sign in with the Google account that should own the listing
-3. Pay the one-time registration fee if Google asks (it is a few dollars, once)
-4. If you turned on account sync, host a short privacy policy page and keep the URL. The form asks for it.
-
-### 3. Upload
-
-1. Dashboard → **New item** (first time) or your item → **Package** (updates)
-2. Upload `sukoon.zip` — not a GitHub zip
-3. Fill in:
-   - Name: Sukoon
+1. Sign in with the Google account that should own the listing
+2. Pay the one-time registration fee if the dashboard asks
+3. **New item** (first time) or your item → **Package** (updates)
+4. Upload `still.zip`
+5. Fill in:
+   - Name: Still
    - Summary: Pomodoro timer for Chrome. 25 minutes of work, 5 minutes of rest, a longer break after four sessions.
    - Category: Productivity
-   - Screenshots: `docs/shots/timer.png`, `running.png`, `activity.png`, `month.png`, `settings.png`, `complete.png` (Google wants 1280×800 or 640×400 — scale them if the form complains)
+   - Screenshots: `docs/shots/timer.png`, `running.png`, `activity.png`, `month.png`, `settings.png`, `complete.png` (the form wants 1280×800 or 640×400)
    - Small tile: `public/icon-128.png`
    - Marquee: `docs/shots/banner.png`
-4. Privacy: single purpose; add `your-project.supabase.co` if sync is on; justify `storage`, `alarms`, `notifications`, `offscreen`
-5. Click **Submit for review**
+6. Privacy: single purpose; add `your-project.supabase.co` if sync is on; justify `storage`, `alarms`, `notifications`, `offscreen`
+7. **Submit for review**
 
-Google emails you when it is live or if they bounce it. Later updates: bump `version` in `public/manifest.json`, run `npm run package`, upload the new zip, submit again.
+Later updates: bump `version` in `public/manifest.json`, run `npm run package`, upload the new zip.
 
-If you would rather zip by hand:
+If you want to zip by hand:
 
 ```bash
 npm run build
 cd dist
-zip -r ../sukoon.zip .
+zip -r ../still.zip .
 ```
 
 ---
@@ -161,7 +138,7 @@ zip -r ../sukoon.zip .
 ```bash
 npm install
 npm run build          # typecheck + dist/
-npm run package        # build + sukoon.zip
+npm run package        # build + still.zip
 npm run preview        # Vite, open /popup.html
 npm run icons          # rebuild toolbar icons
 ```
@@ -177,7 +154,7 @@ The UI loads without those keys. Account sync stays off until they are set.
 
 Apply `supabase/migrations/` on the Supabase project if you want cloud sync.
 
-To regenerate README images (optional, not a store deploy):
+To regenerate README images:
 
 ```bash
 npm run preview

@@ -22,7 +22,7 @@ shot() {
     --disable-dev-shm-usage \
     --no-first-run \
     --no-default-browser-check \
-    --user-data-dir="/tmp/sukoon-chrome-docs-$name" \
+    --user-data-dir="/tmp/still-chrome-docs-$name" \
     --force-device-scale-factor=2 \
     --window-size="$width,$height" \
     --virtual-time-budget=8000 \
