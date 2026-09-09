@@ -1,56 +1,28 @@
-:root,
-[data-theme="dark"] {
+:root {
   color-scheme: dark;
-  --canvas: #14130f;
-  --canvas-soft: #18170f;
-  --surface: #1c1b16;
-  --surface-hover: #232218;
-  --surface-strong: #26251e;
-  --ink: #f2f1ed;
-  --body: #c4c0b6;
-  --muted: #8a877c;
-  --hairline: #2e2c26;
-  --hairline-strong: #3d3a32;
-  --primary: #f54e00;
-  --primary-active: #d04200;
-  --primary-soft: rgba(245, 78, 0, 0.14);
-  --on-primary: #fff7f2;
-  --success: #3d9b74;
-  --success-soft: rgba(61, 155, 116, 0.16);
-  --gold: #c08532;
-  --gold-soft: rgba(192, 133, 50, 0.16);
-  --danger: #cf2d56;
-  --danger-soft: rgba(207, 45, 86, 0.14);
-  --ring-track: #2a2822;
-  --overlay: rgba(10, 9, 7, 0.62);
-  --focus-glow: rgba(245, 78, 0, 0.28);
-}
-
-[data-theme="light"] {
-  color-scheme: light;
-  --canvas: #f7f7f4;
-  --canvas-soft: #fafaf7;
-  --surface: #ffffff;
-  --surface-hover: #f3f2ee;
-  --surface-strong: #e6e5e0;
-  --ink: #26251e;
-  --body: #5a5852;
-  --muted: #807d72;
-  --hairline: #e6e5e0;
-  --hairline-strong: #cfcdc4;
-  --primary: #f54e00;
-  --primary-active: #d04200;
-  --primary-soft: rgba(245, 78, 0, 0.1);
-  --on-primary: #ffffff;
-  --success: #1f8a65;
-  --success-soft: rgba(31, 138, 101, 0.1);
-  --gold: #c08532;
-  --gold-soft: rgba(192, 133, 50, 0.12);
-  --danger: #cf2d56;
-  --danger-soft: rgba(207, 45, 86, 0.1);
-  --ring-track: #e6e5e0;
-  --overlay: rgba(38, 37, 30, 0.42);
-  --focus-glow: rgba(245, 78, 0, 0.18);
+  --canvas: #58564f;
+  --canvas-soft: #5e5c55;
+  --surface: #64625a;
+  --surface-hover: #6e6c63;
+  --surface-strong: #78766c;
+  --ink: #d4d1c8;
+  --body: #b3b0a6;
+  --muted: #918e84;
+  --hairline: #706e65;
+  --hairline-strong: #7d7b71;
+  --primary: #c9c3b4;
+  --primary-active: #b9b3a4;
+  --primary-soft: rgba(201, 195, 180, 0.2);
+  --on-primary: #3c3b36;
+  --success: #8d977c;
+  --success-soft: rgba(141, 151, 124, 0.2);
+  --gold: #b4a37c;
+  --gold-soft: rgba(180, 163, 124, 0.2);
+  --danger: #b48480;
+  --danger-soft: rgba(180, 132, 128, 0.18);
+  --ring-track: #6a685f;
+  --overlay: rgba(58, 56, 50, 0.5);
+  --focus-glow: rgba(201, 195, 180, 0.24);
 }
 
 * {
@@ -73,7 +45,7 @@ body {
   font-family: Inter, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
   font-size: 13.5px;
   letter-spacing: -0.011em;
-  box-shadow: 0 0 0 1px var(--hairline);
+  box-shadow: none;
 }
 
 button,
@@ -101,9 +73,7 @@ input[type="number"]::-webkit-outer-spin-button {
   min-height: 560px;
   display: flex;
   flex-direction: column;
-  background:
-    radial-gradient(circle at 12% -10%, var(--primary-soft), transparent 36%),
-    var(--canvas);
+  background: var(--canvas);
 }
 
 .app.loading {
@@ -141,8 +111,8 @@ input[type="number"]::-webkit-outer-spin-button {
   width: 22px;
   height: 22px;
   border-radius: 6px;
-  background: var(--primary);
-  color: var(--on-primary);
+  background: var(--surface-strong);
+  color: var(--ink);
   display: grid;
   place-items: center;
   flex-shrink: 0;
@@ -244,6 +214,7 @@ input[type="number"]::-webkit-outer-spin-button {
   font-weight: 500;
   letter-spacing: -0.06em;
   line-height: 0.9;
+  color: var(--ink);
 }
 
 .mode-kicker {
@@ -754,7 +725,7 @@ select.account-input {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: #f7f7f4;
+  background: var(--ink);
 }
 
 .settings-toggle:checked {
@@ -975,7 +946,7 @@ select.account-input {
 }
 
 .eyebrow {
-  color: var(--primary);
+  color: var(--muted);
   font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;

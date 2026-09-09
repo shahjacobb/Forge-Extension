@@ -23,7 +23,7 @@ import {
   modeLabel
 } from "../shared/analytics";
 import { supabase } from "../shared/supabase";
-import type { ChimeType, PersistedState, RuntimeMessage, ThemePreference, TimerCommand, TimerMode, TimerSettings } from "../shared/types";
+import type { ChimeType, PersistedState, RuntimeMessage, TimerCommand, TimerMode, TimerSettings } from "../shared/types";
 import "./styles.css";
 
 installChromeMock();
@@ -192,13 +192,6 @@ const App = () => {
   }, [settingsSignature]);
 
   React.useEffect(() => {
-    const theme = settingsDraft?.theme ?? state?.settings.theme;
-    if (theme) {
-      document.documentElement.dataset.theme = theme;
-    }
-  }, [settingsDraft?.theme, state?.settings.theme]);
-
-  React.useEffect(() => {
     if (!state) {
       return;
     }
@@ -278,7 +271,6 @@ const App = () => {
   const greetingName = profileName ? firstName(profileName) : "";
   const goal = state.settings.dailyGoalMinutes;
   const goalPct = goal > 0 ? Math.min(100, (focusToday / goal) * 100) : 0;
-  const theme: ThemePreference = state.settings.theme;
   const nextBreak = state.timer.sessionCount > 0 && (state.timer.sessionCount + 1) % state.settings.sessionsUntilLongBreak === 0
     ? "long break"
     : "break";
@@ -412,7 +404,7 @@ const App = () => {
       ? "Paused — press space to resume"
       : `Next up: ${modeLabel(state.timer.mode)}`;
 
-  const chartColor = theme === "light" ? "#f54e00" : "#f54e00";
+  const chartColor = "#9a9588";
 
   return (
     <main className="app">
@@ -592,7 +584,7 @@ const App = () => {
                   {monthData.days.map((day) => (
                     <div className={`calendar-day${day.isToday ? " today" : ""}${day.minutes > 0 ? " has-data" : ""}${day.isOutside ? " outside" : ""}`} key={day.key}>
                       {day.minutes > 0 ? (
-                        <div className="heat-bg" style={{ background: `rgba(245, 78, 0, ${0.08 + 0.32 * (day.minutes / maxDayMinutes)})` }} />
+                        <div className="heat-bg" style={{ background: `rgba(159, 154, 136, ${0.12 + 0.42 * (day.minutes / maxDayMinutes)})` }} />
                       ) : null}
                       <span>{day.day}</span>
                     </div>
@@ -612,7 +604,7 @@ const App = () => {
             <div className="heading">
               <div>
                 <h1>Settings</h1>
-                <p>Durations, sound, theme, and the account that follows you across Chrome profiles.</p>
+                <p>Durations, sound, and the account that follows you across Chrome profiles.</p>
               </div>
             </div>
 
@@ -736,25 +728,6 @@ const App = () => {
                 </div>
               </div>
 
-              <label className="settings-row">
-                <div className="settings-copy">
-                  <span className="settings-label">Theme</span>
-                  <p>Cursor cream or warm editor dark.</p>
-                </div>
-                <select
-                  className="settings-input"
-                  value={settingsDraft?.theme ?? state.settings.theme}
-                  onChange={(event) =>
-                    setSettingsDraft((current) => ({
-                      ...(current ?? state.settings),
-                      theme: event.target.value as ThemePreference
-                    }))
-                  }
-                >
-                  <option value="dark">Dark</option>
-                  <option value="light">Cream</option>
-                </select>
-              </label>
             </section>
 
             <button className="cta full" disabled={!hasSettingsChanges} onClick={() => void saveSettings()}>

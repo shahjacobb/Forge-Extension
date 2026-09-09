@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { installChromeMock } from "../shared/chrome-mock";
-import type { PersistedState, ThemePreference, TimerSettings } from "../shared/types";
+import type { PersistedState, TimerSettings } from "../shared/types";
 import "../popup/styles.css";
 
 installChromeMock();
@@ -15,7 +15,6 @@ const App = () => {
     void chrome.runtime.sendMessage({ type: "getState" }).then((nextState: PersistedState) => {
       setState(nextState);
       setDraft(nextState.settings);
-      document.documentElement.dataset.theme = nextState.settings.theme;
     });
   }, []);
 
@@ -30,7 +29,6 @@ const App = () => {
     })) as PersistedState;
     setState(nextState);
     setDraft(nextState.settings);
-    document.documentElement.dataset.theme = nextState.settings.theme;
     setNotice("Saved. Open Forge on another Chrome profile and sign in to take these with you.");
   };
 
@@ -46,7 +44,7 @@ const App = () => {
         <header>
           <div className="eyebrow">Forge</div>
           <h1>Settings</h1>
-          <p>Timer lengths, sound, and the theme used in this Chrome profile.</p>
+          <p>Timer lengths and sound for this Chrome profile.</p>
         </header>
 
         <section className="settings-group">
@@ -77,16 +75,6 @@ const App = () => {
               <p>Play chimes when sessions start and finish.</p>
             </div>
             <input className="settings-toggle" type="checkbox" checked={draft.soundEnabled} onChange={(event) => patch({ soundEnabled: event.target.checked })} />
-          </label>
-          <label className="settings-row">
-            <div className="settings-copy">
-              <span className="settings-label">Theme</span>
-              <p>Cursor cream or warm editor dark.</p>
-            </div>
-            <select className="settings-input" value={draft.theme} onChange={(event) => patch({ theme: event.target.value as ThemePreference })}>
-              <option value="dark">Dark</option>
-              <option value="light">Cream</option>
-            </select>
           </label>
         </section>
 

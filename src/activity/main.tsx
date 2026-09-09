@@ -14,7 +14,7 @@ const App = () => {
   React.useEffect(() => {
     void chrome.runtime.sendMessage({ type: "getState" }).then((nextState: PersistedState) => {
       setState(nextState);
-      document.documentElement.dataset.theme = nextState.settings.theme;
+      document.documentElement.removeAttribute("data-theme");
     });
   }, []);
 
@@ -70,7 +70,7 @@ const App = () => {
                 contentStyle={{ background: "var(--surface)", border: "1px solid var(--hairline)", borderRadius: 8 }}
                 formatter={(value: number) => [`${value} min`, "Focus"]}
               />
-              <Bar dataKey="minutes" fill="#f54e00" radius={[6, 6, 2, 2]} />
+              <Bar dataKey="minutes" fill="#9a9588" radius={[6, 6, 2, 2]} />
             </BarChart>
           </ResponsiveContainer>
         </div>

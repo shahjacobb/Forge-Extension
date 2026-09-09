@@ -1,6 +1,6 @@
 # Forge — Chrome Extension
 
-A Cursor-themed Pomodoro timer for Chrome. Focus, break, and long-break rounds, richer chimes, and an account that follows you across Chrome profiles.
+A Pomodoro timer for Chrome with a warm gray Harvey-like palette. Focus, break, and long-break rounds, richer chimes, and an account that follows you across Chrome profiles.
 
 ---
 

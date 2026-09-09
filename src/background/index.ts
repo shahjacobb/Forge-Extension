@@ -64,7 +64,7 @@ const updateBadge = async (state: PersistedState) => {
         : 0;
 
   const color =
-    state.timer.mode === "focus" ? "#f54e00" : state.timer.mode === "longBreak" ? "#c08532" : "#1f8a65";
+    state.timer.mode === "focus" ? "#6c6a60" : state.timer.mode === "longBreak" ? "#b9a57a" : "#8f9a7c";
 
   await chrome.action.setBadgeBackgroundColor({ color });
   await chrome.action.setBadgeTextColor({ color: "#ffffff" }).catch(() => {});
