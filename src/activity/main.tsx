@@ -1,19 +1,25 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { installChromeMock } from "../shared/chrome-mock";
 import { buildWeeklyData, computeStreak, getWeekLabel } from "../shared/analytics";
 import type { PersistedState } from "../shared/types";
 import "../popup/styles.css";
+
+installChromeMock();
 
 const App = () => {
   const [state, setState] = React.useState<PersistedState | null>(null);
 
   React.useEffect(() => {
-    void chrome.runtime.sendMessage({ type: "getState" }).then((nextState: PersistedState) => setState(nextState));
+    void chrome.runtime.sendMessage({ type: "getState" }).then((nextState: PersistedState) => {
+      setState(nextState);
+      document.documentElement.removeAttribute("data-theme");
+    });
   }, []);
 
   if (!state) {
-    return <main className="activity-shell">Loading activity...</main>;
+    return <main className="activity-shell">Loading activity…</main>;
   }
 
   const weeklyData = buildWeeklyData(state.sessions);
@@ -32,7 +38,7 @@ const App = () => {
       <header className="chart-panel">
         <div className="eyebrow">Forge Activity</div>
         <h1>Focus activity</h1>
-        <p>{todayLabel}</p>
+        <p className="lede">{todayLabel}</p>
       </header>
 
       <section className="stats-grid">
@@ -41,7 +47,7 @@ const App = () => {
           <strong>{focusToday} min</strong>
         </article>
         <article className="stat-card">
-          <span className="stat-label">This Week</span>
+          <span className="stat-label">This week</span>
           <strong>{weeklyTotal} min</strong>
         </article>
         <article className="stat-card">
@@ -53,32 +59,18 @@ const App = () => {
       <section className="chart-panel">
         <div className="panel-header">
           <h2>{getWeekLabel()}</h2>
-          <a href="popup.html" target="_blank" rel="noreferrer">
-            Timer
-          </a>
         </div>
         <div className="activity-chart">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={weeklyData}>
-              <XAxis dataKey="label" axisLine={false} tickLine={false} />
-              <YAxis axisLine={false} tickLine={false} tick={{ fill: "rgba(255,255,255,0.3)", fontSize: 10 }} width={28} tickFormatter={(v: number) => `${v}m`} />
+              <XAxis dataKey="label" axisLine={false} tickLine={false} tick={{ fill: "currentColor" }} />
+              <YAxis axisLine={false} tickLine={false} width={32} tick={{ fill: "currentColor", fontSize: 10 }} tickFormatter={(value: number) => `${value}m`} />
               <Tooltip
-                cursor={{ fill: "rgba(255,255,255,0.04)" }}
-                contentStyle={{
-                  background: "#0f0f10",
-                  border: "1px solid rgba(255,255,255,0.12)",
-                  borderRadius: 16
-                }}
+                cursor={{ fill: "var(--primary-soft)" }}
+                contentStyle={{ background: "var(--surface)", border: "1px solid var(--hairline)", borderRadius: 8 }}
                 formatter={(value: number) => [`${value} min`, "Focus"]}
-                labelFormatter={(label: string, payload) => payload?.[0]?.payload?.fullLabel ?? label}
               />
-              <Bar dataKey="minutes" fill="url(#activityBars)" radius={[10, 10, 4, 4]} />
-              <defs>
-                <linearGradient id="activityBars" x1="0" x2="0" y1="0" y2="1">
-                  <stop offset="0%" stopColor="#f5f5f5" />
-                  <stop offset="100%" stopColor="#6b7280" />
-                </linearGradient>
-              </defs>
+              <Bar dataKey="minutes" fill="#9a9588" radius={[6, 6, 2, 2]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -94,7 +86,9 @@ const App = () => {
             <article className="activity-row" key={day.key}>
               <div>
                 <strong>{day.fullLabel}</strong>
-                <div className="activity-subtle">{day.minutes > 0 ? "Focus tracked" : "No focus sessions logged"}</div>
+                <div className="activity-subtle">
+                  {day.sessions > 0 ? `${day.sessions} focus session${day.sessions === 1 ? "" : "s"}` : "No focus sessions"}
+                </div>
               </div>
               <strong>{day.minutes} min</strong>
             </article>

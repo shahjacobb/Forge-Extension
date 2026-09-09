@@ -1,26 +1,42 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { installChromeMock } from "../shared/chrome-mock";
 import type { PersistedState, TimerSettings } from "../shared/types";
 import "../popup/styles.css";
 
+installChromeMock();
+
 const App = () => {
   const [state, setState] = React.useState<PersistedState | null>(null);
+  const [draft, setDraft] = React.useState<TimerSettings | null>(null);
+  const [notice, setNotice] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    void chrome.runtime.sendMessage({ type: "getState" }).then((nextState: PersistedState) => setState(nextState));
+    void chrome.runtime.sendMessage({ type: "getState" }).then((nextState: PersistedState) => {
+      setState(nextState);
+      setDraft(nextState.settings);
+    });
   }, []);
 
-  const update = async (patch: Partial<TimerSettings>) => {
-    const nextState = await chrome.runtime.sendMessage({
+  const save = async () => {
+    if (!draft) {
+      return;
+    }
+
+    const nextState = (await chrome.runtime.sendMessage({
       type: "updateSettings",
-      payload: patch
-    });
-    setState(nextState as PersistedState);
+      payload: draft
+    })) as PersistedState;
+    setState(nextState);
+    setDraft(nextState.settings);
+    setNotice("Saved. Open Forge on another Chrome profile and sign in to take these with you.");
   };
 
-  if (!state) {
-    return <main className="settings-shell">Loading settings...</main>;
+  if (!state || !draft) {
+    return <main className="settings-shell">Loading Forge settings…</main>;
   }
+
+  const patch = (partial: Partial<TimerSettings>) => setDraft((current) => ({ ...(current ?? state.settings), ...partial }));
 
   return (
     <main className="settings-shell">
@@ -28,51 +44,44 @@ const App = () => {
         <header>
           <div className="eyebrow">Forge</div>
           <h1>Settings</h1>
-          <p>Adjust timer lengths for this Chrome profile.</p>
+          <p>Timer lengths and sound for this Chrome profile.</p>
         </header>
 
         <section className="settings-group">
-          <div className="settings-row">
+          <label className="settings-row">
             <div className="settings-copy">
-              <span className="settings-label">Focus Session</span>
+              <span className="settings-label">Focus</span>
               <p>Primary concentration block.</p>
             </div>
-            <input
-              className="settings-input"
-              type="number"
-              min={1}
-              value={state.settings.focusMinutes}
-              onChange={(event) => void update({ focusMinutes: Number(event.target.value) || 1 })}
-            />
-          </div>
-
-          <div className="settings-row">
+            <input className="settings-input" type="number" min={1} value={draft.focusMinutes} onChange={(event) => patch({ focusMinutes: Number(event.target.value) || 1 })} />
+          </label>
+          <label className="settings-row">
             <div className="settings-copy">
-              <span className="settings-label">Break Session</span>
-              <p>Recovery block between focus rounds.</p>
+              <span className="settings-label">Break</span>
+              <p>Short recovery between rounds.</p>
             </div>
-            <input
-              className="settings-input"
-              type="number"
-              min={1}
-              value={state.settings.breakMinutes}
-              onChange={(event) => void update({ breakMinutes: Number(event.target.value) || 1 })}
-            />
-          </div>
-
-          <div className="settings-row">
+            <input className="settings-input" type="number" min={1} value={draft.breakMinutes} onChange={(event) => patch({ breakMinutes: Number(event.target.value) || 1 })} />
+          </label>
+          <label className="settings-row">
             <div className="settings-copy">
-              <span className="settings-label">Auto Break</span>
-              <p>Start breaks automatically when focus ends.</p>
+              <span className="settings-label">Long break</span>
+              <p>After a full set of focus sessions.</p>
             </div>
-            <input
-              className="settings-toggle"
-              type="checkbox"
-              checked={state.settings.autoStartBreaks}
-              onChange={(event) => void update({ autoStartBreaks: event.target.checked })}
-            />
-          </div>
+            <input className="settings-input" type="number" min={1} value={draft.longBreakMinutes} onChange={(event) => patch({ longBreakMinutes: Number(event.target.value) || 1 })} />
+          </label>
+          <label className="settings-row">
+            <div className="settings-copy">
+              <span className="settings-label">Sound</span>
+              <p>Play chimes when sessions start and finish.</p>
+            </div>
+            <input className="settings-toggle" type="checkbox" checked={draft.soundEnabled} onChange={(event) => patch({ soundEnabled: event.target.checked })} />
+          </label>
         </section>
+
+        <button className="cta full" onClick={() => void save()}>
+          Save settings
+        </button>
+        {notice ? <div className="account-notice">{notice}</div> : null}
       </section>
     </main>
   );
