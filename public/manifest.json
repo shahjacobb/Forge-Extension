@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Lahza",
   "version": "0.5.0",
-  "description": "A Pomodoro timer for Chrome. Work 25 minutes, rest 5. After four sessions, take a longer break.",
+  "description": "A focus timer for Chrome. Classic Pomodoro, or set your own session lengths.",
   "permissions": ["storage", "alarms", "notifications", "offscreen"],
   "host_permissions": ["https://tiopzxojmnortiwbgfrx.supabase.co/*"],
   "background": {
