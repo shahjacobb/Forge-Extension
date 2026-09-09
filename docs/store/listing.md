@@ -9,17 +9,13 @@ Paste these on **Store listing**. Drop the images from this folder.
 **Description:**
 
 ```
-Lahza is a customizable focus timer for Chrome.
+Lahza is a focus timer for Chrome. You can run a classic Pomodoro — 25 minutes of work, 5 of rest — or set the lengths yourself. After four focus sessions it offers a longer break.
 
-Run a classic Pomodoro — 25 minutes of work, 5 of rest — or set your own lengths. After a few focus sessions, take a longer break. Pin it on the toolbar. While it runs, the icon shows how much time you have left.
+Pin it on the toolbar. While a session is running, the icon shows the time you have left. When it ends, Chrome sends a notification. There’s a chime too, if you leave sound on.
 
-Focus, break, or long break. Start, pause, skip, restart. When a session ends, Chrome lets you know.
+Activity has today, your week, and your streak. Week is a bar chart. Month is a heat map of the days you focused.
 
-Activity shows today, your week, your streak, and a month heat map.
-
-Settings has Classic 25/5, Deep 50/10, Sprint 15/3, or type the minutes yourself. Sound on or off.
-
-Keyboard: Alt+Shift+P starts or pauses from any tab.
+Alt+Shift+P starts or pauses from any tab.
 
 Lahza (لحظة) is said LAH-zah.
 ```
