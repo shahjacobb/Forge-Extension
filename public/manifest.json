@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Sukoon",
+  "name": "Lahza",
   "version": "0.5.0",
-  "description": "A focus timer for Chrome. Focus sessions for deep work, a short rest, and a longer pause after four rounds.",
+  "description": "A Pomodoro timer for Chrome. Work 25 minutes, rest 5. After four sessions, take a longer break.",
   "permissions": ["storage", "alarms", "notifications", "offscreen"],
   "host_permissions": ["https://tiopzxojmnortiwbgfrx.supabase.co/*"],
   "background": {
@@ -16,7 +16,7 @@
     "128": "icon-128.png"
   },
   "action": {
-    "default_title": "Sukoon — focus timer",
+    "default_title": "Lahza — focus timer",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icon-16.png",
@@ -31,10 +31,10 @@
       "suggested_key": {
         "default": "Alt+Shift+P"
       },
-      "description": "Start or pause the Sukoon focus timer"
+      "description": "Start or pause the Lahza focus timer"
     },
     "skip-session": {
-      "description": "Skip to the next Sukoon session"
+      "description": "Skip to the next Lahza session"
     }
   }
 }

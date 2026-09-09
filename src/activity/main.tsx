@@ -36,7 +36,7 @@ const App = () => {
   return (
     <main className="activity-shell">
       <header className="chart-panel">
-        <div className="eyebrow">Sukoon</div>
+        <div className="eyebrow">Lahza</div>
         <h1>Focus activity</h1>
         <p className="lede">{todayLabel}</p>
       </header>

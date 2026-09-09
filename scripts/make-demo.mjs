@@ -11,7 +11,7 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outDir = path.join(root, "docs");
-const framesDir = "/tmp/sukoon-demo-frames";
+const framesDir = "/tmp/lahza-demo-frames";
 const chrome = process.env.CHROME || "/opt/google/chrome/google-chrome";
 const port = Number(process.env.DEMO_CDP_PORT || 9333);
 const base = process.env.BASE || "http://127.0.0.1:5173";
@@ -134,7 +134,7 @@ const main = async () => {
   await rm(framesDir, { recursive: true, force: true });
   await mkdir(framesDir, { recursive: true });
 
-  const userData = `/tmp/sukoon-demo-chrome-${Date.now()}`;
+  const userData = `/tmp/lahza-demo-chrome-${Date.now()}`;
   const child = spawn(
     chrome,
     [

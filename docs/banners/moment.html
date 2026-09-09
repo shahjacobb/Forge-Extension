@@ -2,37 +2,35 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Sukoon</title>
+    <title>Lahza</title>
     <style>
       html,
       body {
         margin: 0;
-        background: #58564f;
+        height: 100%;
+        background: #4f4d47;
+        color: #e8e4dc;
+        font-family: Inter, "Segoe UI", system-ui, sans-serif;
       }
 
       .artboard {
         width: 1600px;
         height: 720px;
         background: #58564f;
-        color: #d4d1c8;
         display: grid;
-        grid-template-columns: 1.15fr 0.85fr;
+        grid-template-columns: 1.2fr 0.8fr;
         overflow: hidden;
         position: relative;
-        font-family: "Source Sans 3", "Segoe UI", sans-serif;
       }
 
-      .mark {
+      .artboard::before {
+        content: "";
         position: absolute;
-        left: 72px;
-        top: 50%;
-        transform: translateY(-48%);
-        font-family: "Noto Kufi Arabic", "Noto Naskh Arabic", serif;
-        font-size: 240px;
-        line-height: 0.85;
-        color: rgba(212, 209, 200, 0.11);
+        inset: 0;
+        background:
+          radial-gradient(circle at 78% 42%, rgba(201, 195, 180, 0.11), transparent 36%),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 42%);
         pointer-events: none;
-        z-index: 0;
       }
 
       .copy,
@@ -42,7 +40,7 @@
       }
 
       .copy {
-        padding: 88px 48px 80px 96px;
+        padding: 72px 64px 72px 96px;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -52,46 +50,52 @@
         font-size: 13px;
         letter-spacing: 0.22em;
         text-transform: uppercase;
-        color: #c9c3b4;
-        margin-bottom: 20px;
+        color: #d4d1c8;
+        margin-bottom: 18px;
+      }
+
+      .name-row {
+        display: flex;
+        align-items: baseline;
+        gap: 22px;
       }
 
       h1 {
         margin: 0;
-        font-family: "Noto Serif Display", "Noto Serif", Georgia, serif;
         font-size: 92px;
         font-weight: 400;
-        letter-spacing: -0.04em;
-        line-height: 0.88;
-        color: #d4d1c8;
+        letter-spacing: -0.055em;
+        line-height: 0.9;
+        color: #f3efe6;
       }
 
       .arabic {
-        margin-top: 10px;
-        font-family: "Noto Naskh Arabic", serif;
-        font-size: 28px;
-        color: #c9c3b4;
+        font-family: "Noto Naskh Arabic", "Times New Roman", serif;
+        font-size: 42px;
+        color: #e6dfd2;
+        letter-spacing: 0;
+        line-height: 1;
       }
 
-      .lede {
-        margin: 28px 0 0;
-        max-width: 520px;
-        font-family: "Noto Serif", Georgia, serif;
+      p {
+        margin: 26px 0 0;
+        max-width: 560px;
         font-size: 22px;
         line-height: 1.45;
-        color: #b3b0a6;
+        color: #f0ece4;
       }
 
       .pills {
         display: flex;
         gap: 10px;
-        margin-top: 36px;
+        margin-top: 34px;
+        flex-wrap: wrap;
       }
 
       .pills span {
-        border: 1px solid #706e65;
+        border: 1px solid #8a877e;
         background: #64625a;
-        color: #d4d1c8;
+        color: #f0ece4;
         border-radius: 999px;
         padding: 8px 14px;
         font-size: 13px;
@@ -104,17 +108,17 @@
       }
 
       .device {
-        width: 300px;
-        height: 500px;
+        width: 320px;
+        height: 520px;
         background: #5e5c55;
-        border: 1px solid #706e65;
-        border-radius: 26px;
-        padding: 26px 22px;
+        border: 1px solid #7a776f;
+        border-radius: 28px;
+        padding: 28px 24px;
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 16px;
+        gap: 18px;
         box-shadow: 0 24px 60px rgba(28, 26, 22, 0.28);
       }
 
@@ -122,39 +126,39 @@
         width: 100%;
         display: flex;
         justify-content: space-between;
-        color: #b3b0a6;
+        color: #d4d1c8;
         font-size: 13px;
       }
 
       .ring {
-        width: 196px;
-        height: 196px;
+        width: 210px;
+        height: 210px;
         border-radius: 50%;
-        background: conic-gradient(#c9c3b4 0 80deg, #6a685f 80deg 360deg);
-        mask: radial-gradient(farthest-side, transparent calc(100% - 9px), #000 calc(100% - 8px));
-        -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 9px), #000 calc(100% - 8px));
+        background: conic-gradient(#c9c3b4 0 72deg, #6a685f 72deg 360deg);
+        mask: radial-gradient(farthest-side, transparent calc(100% - 10px), #000 calc(100% - 9px));
+        -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 10px), #000 calc(100% - 9px));
       }
 
       .time {
-        margin-top: -138px;
+        margin-top: -148px;
         text-align: center;
       }
 
       .time small {
         display: block;
-        letter-spacing: 0.18em;
+        letter-spacing: 0.16em;
         text-transform: uppercase;
-        color: #918e84;
+        color: #c4c0b6;
         font-size: 11px;
         margin-bottom: 8px;
       }
 
       .time strong {
-        font-family: "DejaVu Sans Mono", ui-monospace, monospace;
-        font-size: 44px;
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 48px;
         font-weight: 500;
         letter-spacing: -0.06em;
-        color: #d4d1c8;
+        color: #f0ece4;
       }
 
       .cta {
@@ -164,31 +168,32 @@
         color: #3c3b36;
         border-radius: 10px;
         text-align: center;
-        padding: 13px 12px;
+        padding: 14px 12px;
         font-size: 15px;
       }
     </style>
   </head>
   <body>
     <div class="artboard">
-      <div class="mark" lang="ar" dir="rtl" aria-hidden="true">سكون</div>
       <div class="copy">
         <div class="kicker">A focus timer for Chrome</div>
-        <h1>Sukoon</h1>
-        <div class="arabic" lang="ar" dir="rtl">سكون</div>
-        <p class="lede">
-          Focus sessions for deep work. A block in the toolbar, a short rest, a longer pause after four.
+        <div class="name-row">
+          <h1>Lahza</h1>
+          <span class="arabic" lang="ar" dir="rtl">لحظة</span>
+        </div>
+        <p>
+          A Pomodoro timer. Work 25 minutes, rest 5. After four sessions, take a longer break.
         </p>
         <div class="pills">
-          <span>Timer</span>
-          <span>Activity</span>
-          <span>Settings</span>
+          <span>Focus</span>
+          <span>Break</span>
+          <span>Long break</span>
         </div>
       </div>
       <div class="stage">
         <div class="device">
           <div class="device-top">
-            <span>Sukoon</span>
+            <span>Lahza</span>
             <span>Focus</span>
           </div>
           <div class="ring"></div>
