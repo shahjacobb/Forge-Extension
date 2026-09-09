@@ -29,7 +29,7 @@ const App = () => {
     })) as PersistedState;
     setState(nextState);
     setDraft(nextState.settings);
-    setNotice("Saved. Open Still on another Chrome profile and sign in to take these with you.");
+    setNotice("Saved. Open Lahza on another Chrome profile and sign in to take these with you.");
   };
 
   if (!state || !draft) {
@@ -42,7 +42,7 @@ const App = () => {
     <main className="settings-shell">
       <section className="settings-card">
         <header>
-          <div className="eyebrow">Still</div>
+          <div className="eyebrow">Lahza</div>
           <h1>Settings</h1>
           <p>Timer lengths and sound for this Chrome profile.</p>
         </header>

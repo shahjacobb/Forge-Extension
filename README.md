@@ -1,12 +1,14 @@
 <p align="center">
-  <img src="docs/shots/banner.png" alt="Still — a Pomodoro timer for Chrome" width="100%" />
+  <img src="docs/shots/banner.png" alt="Lahza — a Pomodoro timer for Chrome" width="100%" />
 </p>
 
-# Still
+# Lahza
 
 **A Pomodoro timer for Chrome.** You work for 25 minutes, rest for 5, and after four sessions you take a longer break. Pin it on the toolbar. While it runs, the icon shows how much time you have left.
 
-![Using Still](docs/demo.gif)
+*Lahza* (لحظة) is said **LAH-zah**.
+
+![Using Lahza](docs/demo.gif)
 
 ---
 
@@ -25,7 +27,7 @@ npm run build
 2. Turn on **Developer mode**
 3. Click **Load unpacked**
 4. Select the **`dist`** folder next to `package.json`
-5. Pin **Still**
+5. Pin **Lahza**
 
 After you change the code, run `npm run build` and click **Reload** on the extension card.
 
@@ -52,7 +54,7 @@ The popup has three tabs at the bottom.
 <img src="docs/shots/timer.png" alt="Idle focus timer" width="280" />
 <img src="docs/shots/running.png" alt="Focus in progress" width="280" />
 
-1. Open Still from the Chrome toolbar.
+1. Open Lahza from the Chrome toolbar.
 2. Leave **Focus** selected (or switch to **Break** / **Long**).
 3. Press **Start focus**, or press **Space**.
 4. **Pause** holds the remaining time. **Resume** continues it.
@@ -105,14 +107,14 @@ npm install
 npm run package
 ```
 
-That writes **`still.zip`** next to `package.json`. Upload it in the [Developer Dashboard](https://chrome.google.com/webstore/devconsole).
+That writes **`lahza.zip`** next to `package.json`. Upload it in the [Developer Dashboard](https://chrome.google.com/webstore/devconsole).
 
 1. Sign in with the Google account that should own the listing
 2. Pay the one-time registration fee if the dashboard asks
 3. **New item** (first time) or your item → **Package** (updates)
-4. Upload `still.zip`
+4. Upload `lahza.zip`
 5. Fill in:
-   - Name: Still
+   - Name: Lahza
    - Summary: Pomodoro timer for Chrome. 25 minutes of work, 5 minutes of rest, a longer break after four sessions.
    - Category: Productivity
    - Screenshots: `docs/shots/timer.png`, `running.png`, `activity.png`, `month.png`, `settings.png`, `complete.png` (the form wants 1280×800 or 640×400)
@@ -128,7 +130,7 @@ If you want to zip by hand:
 ```bash
 npm run build
 cd dist
-zip -r ../still.zip .
+zip -r ../lahza.zip .
 ```
 
 ---
@@ -138,7 +140,7 @@ zip -r ../still.zip .
 ```bash
 npm install
 npm run build          # typecheck + dist/
-npm run package        # build + still.zip
+npm run package        # build + lahza.zip
 npm run preview        # Vite, open /popup.html
 npm run icons          # rebuild toolbar icons
 ```

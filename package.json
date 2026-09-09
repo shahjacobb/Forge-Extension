@@ -1,12 +1,12 @@
 {
-  "name": "still",
+  "name": "lahza",
   "private": true,
   "version": "0.5.0",
   "type": "module",
   "scripts": {
     "dev": "vite build --watch",
     "build": "tsc && vite build",
-    "package": "npm run build && rm -f still.zip && (cd dist && zip -r ../still.zip .)",
+    "package": "npm run build && rm -f lahza.zip && (cd dist && zip -r ../lahza.zip .)",
     "preview": "vite --open /popup.html",
     "icons": "python3 scripts/generate-icons.py"
   },

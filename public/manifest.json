@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Still",
+  "name": "Lahza",
   "version": "0.5.0",
   "description": "A Pomodoro timer for Chrome. Work 25 minutes, rest 5. After four sessions, take a longer break.",
   "permissions": ["storage", "alarms", "notifications", "offscreen"],
@@ -16,7 +16,7 @@
     "128": "icon-128.png"
   },
   "action": {
-    "default_title": "Still — focus timer",
+    "default_title": "Lahza — focus timer",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icon-16.png",
@@ -31,10 +31,10 @@
       "suggested_key": {
         "default": "Alt+Shift+P"
       },
-      "description": "Start or pause the Still focus timer"
+      "description": "Start or pause the Lahza focus timer"
     },
     "skip-session": {
-      "description": "Skip to the next Still session"
+      "description": "Skip to the next Lahza session"
     }
   }
 }
