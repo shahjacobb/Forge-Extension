@@ -14,13 +14,15 @@
 
 ## Setup
 
-You need [Node.js](https://nodejs.org/) 18+ (the LTS installer) and Chrome. Close and reopen the terminal after installing Node, then:
+[Download `lahza.zip`](release/lahza.zip). Unzip it. Then:
 
-```bash
-node -v
-```
+1. In Chrome, go to `chrome://extensions`
+2. Turn on **Developer mode**
+3. **Load unpacked**
+4. Select the unzipped folder (it has `manifest.json` in it)
+5. Pin **Lahza**
 
-That should print `v18` or higher.
+To build from source instead: [Node.js](https://nodejs.org/) 18+ (LTS), then:
 
 ```bash
 git clone https://github.com/shahjacobb/Forge-Extension.git
@@ -29,21 +31,9 @@ npm install
 npm run build
 ```
 
-`npm install` fills `node_modules`. `npm run build` writes the extension into **`dist`**. Open that folder — `manifest.json` should be sitting in it.
-
-Then:
-
-1. In Chrome, go to `chrome://extensions`
-2. Turn on **Developer mode**
-3. **Load unpacked**
-4. Select **`dist`** (inside the repo, next to `package.json`)
-5. Pin **Lahza**
-
-If Chrome says it cannot find a manifest, you picked the repo folder. Go into `dist` and select that.
+Load unpacked on the **`dist`** folder that creates.
 
 After you change the code: `npm run build`, then **Reload** on the extension card.
-
-If you already have `lahza.zip`, skip npm. Unzip it and Load unpacked on *that* folder (it also has `manifest.json`). Do not run `npm install` in there — that zip is the built extension, not the source.
 
 ---
 
