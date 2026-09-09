@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="docs/shots/banner.png" alt="Lahza — a Pomodoro timer for Chrome" width="100%" />
+  <img src="docs/shots/banner.png" alt="Lahza — customizable focus timer for Chrome" width="100%" />
 </p>
 
 # Lahza
 
-**A Pomodoro timer for Chrome.** You work for 25 minutes, rest for 5, and after four sessions you take a longer break. Pin it on the toolbar. While it runs, the icon shows how much time you have left.
+**Customizable focus timer for Chrome.** Classic Pomodoro if you want 25 and 5, or set the lengths yourself. Pin it on the toolbar — while it runs, the icon shows how much time you have left.
 
 *Lahza* (لحظة) is said **LAH-zah**.
 
@@ -14,7 +14,15 @@
 
 ## Setup
 
-You need [Node.js](https://nodejs.org/) 18+ and Chrome.
+[Download `lahza.zip`](release/lahza.zip). Unzip it. Then:
+
+1. In Chrome, go to `chrome://extensions`
+2. Turn on **Developer mode**
+3. **Load unpacked**
+4. Select the unzipped folder (it has `manifest.json` in it)
+5. Pin **Lahza**
+
+To build from source instead: [Node.js](https://nodejs.org/) 18+ (LTS), then:
 
 ```bash
 git clone https://github.com/shahjacobb/Forge-Extension.git
@@ -23,13 +31,9 @@ npm install
 npm run build
 ```
 
-1. Open `chrome://extensions`
-2. Turn on **Developer mode**
-3. Click **Load unpacked**
-4. Select the **`dist`** folder next to `package.json`
-5. Pin **Lahza**
+Load unpacked on the **`dist`** folder that creates.
 
-After you change the code, run `npm run build` and click **Reload** on the extension card.
+After you change the code: `npm run build`, then **Reload** on the extension card.
 
 ---
 
@@ -58,7 +62,7 @@ The popup has three tabs at the bottom.
 2. Leave **Focus** selected (or switch to **Break** / **Long**).
 3. Press **Start focus**, or press **Space**.
 4. **Pause** holds the remaining time. **Resume** continues it.
-5. **Skip** ends the block and records it. After four focuses, the next skip is a long break.
+5. **Skip** ends the block and records it. After four focuses (or whatever you set), the next skip is a long break.
 6. **Restart** starts the current block over. **Reset** returns to an idle focus.
 
 While it runs, the toolbar badge shows time left. `Alt+Shift+P` starts or pauses from any Chrome tab.
@@ -82,8 +86,8 @@ Open **Activity**. **Week** is the last seven days plus a daily list. **Month** 
 
 Open **Settings**.
 
-- **Classic 25/5**, **Deep 50/10**, **Sprint 15/3** apply immediately.
-- Focus, break, long break, rounds, and daily goal are minutes.
+- **Classic 25/5** is Pomodoro. **Deep 50/10** and **Sprint 15/3** are one click. Or type your own minutes.
+- Focus, break, long break, rounds, and daily goal are whatever you set.
 - Auto-start break / auto-start focus if you want the next block to begin on its own.
 - Sound on/off, volume, and **Play** to preview the chime.
 - **Save changes** writes the rest of the form.
@@ -113,13 +117,7 @@ That writes **`lahza.zip`** next to `package.json`. Upload it in the [Developer 
 2. Pay the one-time registration fee if the dashboard asks
 3. **New item** (first time) or your item → **Package** (updates)
 4. Upload `lahza.zip`
-5. Fill in:
-   - Name: Lahza
-   - Summary: Pomodoro timer for Chrome. 25 minutes of work, 5 minutes of rest, a longer break after four sessions.
-   - Category: Productivity
-   - Screenshots: `docs/shots/timer.png`, `running.png`, `activity.png`, `month.png`, `settings.png`, `complete.png` (the form wants 1280×800 or 640×400)
-   - Small tile: `public/icon-128.png`
-   - Marquee: `docs/shots/banner.png`
+5. Fill in **Store listing** from `docs/store/listing.md`. Drop the images in `docs/store/` (they are already the sizes Google wants).
 6. Privacy: single purpose; add `your-project.supabase.co` if sync is on; justify `storage`, `alarms`, `notifications`, `offscreen`
 7. **Submit for review**
 

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite build --watch",
     "build": "tsc && vite build",
-    "package": "npm run build && rm -f lahza.zip && (cd dist && zip -r ../lahza.zip .)",
+    "package": "npm run build && rm -f lahza.zip && (cd dist && zip -r ../lahza.zip .) && mkdir -p release && cp lahza.zip release/lahza.zip",
     "preview": "vite --open /popup.html",
     "icons": "python3 scripts/generate-icons.py"
   },
