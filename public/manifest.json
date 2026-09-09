@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Forge (Claude)",
-  "version": "0.0.1",
-  "description": "Focus timer that gets out of your way. Tracks sessions, reminds you to break.",
+  "name": "Forge",
+  "version": "0.2.0",
+  "description": "Cursor-themed focus timer. Sessions, streaks, sound, and account sync across Chrome profiles.",
   "permissions": ["storage", "alarms", "notifications", "offscreen"],
   "host_permissions": ["https://tiopzxojmnortiwbgfrx.supabase.co/*"],
   "background": {
@@ -10,12 +10,31 @@
     "type": "module"
   },
   "icons": {
+    "16": "icon-16.png",
+    "32": "icon-32.png",
+    "48": "icon-48.png",
     "128": "icon-128.png"
   },
   "action": {
-    "default_title": "Forge (Claude)",
+    "default_title": "Forge",
     "default_popup": "popup.html",
-    "default_icon": "icon-128.png"
+    "default_icon": {
+      "16": "icon-16.png",
+      "32": "icon-32.png",
+      "48": "icon-48.png",
+      "128": "icon-128.png"
+    }
   },
-  "options_page": "options.html"
+  "options_page": "options.html",
+  "commands": {
+    "toggle-timer": {
+      "suggested_key": {
+        "default": "Alt+Shift+P"
+      },
+      "description": "Start or pause the Forge timer"
+    },
+    "skip-session": {
+      "description": "Skip to the next Forge session"
+    }
+  }
 }

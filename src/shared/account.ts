@@ -1,6 +1,6 @@
 import type { Session, User } from "@supabase/supabase-js";
-import { defaultSettings, getState, modeDurationMs, normalizeState, setState, trimSessions } from "./storage";
-import { supabase } from "./supabase";
+import { defaultSettings, getState, modeDurationMs, normalizeSettings, normalizeState, setState, trimSessions } from "./storage";
+import { isSupabaseConfigured, supabase } from "./supabase";
 import type { PersistedState, SessionRecord, TimerSettings } from "./types";
 
 interface RemoteProfile {
@@ -14,6 +14,7 @@ interface RemotePreferences {
   focus_minutes: number;
   break_minutes: number;
   auto_start_breaks: boolean;
+  extras?: Record<string, unknown> | null;
 }
 
 interface RemoteSession {
@@ -24,6 +25,7 @@ interface RemoteSession {
 }
 
 export interface AccountSnapshot {
+  configured: boolean;
   user: User | null;
   session: Session | null;
   profile: RemoteProfile | null;
@@ -32,18 +34,48 @@ export interface AccountSnapshot {
 const settingsEqual = (left: TimerSettings, right: TimerSettings): boolean =>
   left.focusMinutes === right.focusMinutes &&
   left.breakMinutes === right.breakMinutes &&
-  left.autoStartBreaks === right.autoStartBreaks;
+  left.longBreakMinutes === right.longBreakMinutes &&
+  left.sessionsUntilLongBreak === right.sessionsUntilLongBreak &&
+  left.autoStartBreaks === right.autoStartBreaks &&
+  left.autoStartFocus === right.autoStartFocus &&
+  left.soundEnabled === right.soundEnabled &&
+  left.soundVolume === right.soundVolume &&
+  left.dailyGoalMinutes === right.dailyGoalMinutes &&
+  left.theme === right.theme;
 
 const isDefaultSettings = (settings: TimerSettings): boolean => settingsEqual(settings, defaultSettings);
 
-const mapRemotePreferences = (preferences: RemotePreferences | null): TimerSettings =>
-  preferences
-    ? {
-        focusMinutes: preferences.focus_minutes,
-        breakMinutes: preferences.break_minutes,
-        autoStartBreaks: preferences.auto_start_breaks
-      }
-    : defaultSettings;
+const extrasFromSettings = (settings: TimerSettings) => ({
+  longBreakMinutes: settings.longBreakMinutes,
+  sessionsUntilLongBreak: settings.sessionsUntilLongBreak,
+  autoStartFocus: settings.autoStartFocus,
+  soundEnabled: settings.soundEnabled,
+  soundVolume: settings.soundVolume,
+  dailyGoalMinutes: settings.dailyGoalMinutes,
+  theme: settings.theme
+});
+
+const mapRemotePreferences = (preferences: RemotePreferences | null): TimerSettings => {
+  if (!preferences) {
+    return defaultSettings;
+  }
+
+  const extras = preferences.extras ?? {};
+
+  return normalizeSettings({
+    focusMinutes: preferences.focus_minutes,
+    breakMinutes: preferences.break_minutes,
+    autoStartBreaks: preferences.auto_start_breaks,
+    longBreakMinutes: typeof extras.longBreakMinutes === "number" ? extras.longBreakMinutes : undefined,
+    sessionsUntilLongBreak:
+      typeof extras.sessionsUntilLongBreak === "number" ? extras.sessionsUntilLongBreak : undefined,
+    autoStartFocus: typeof extras.autoStartFocus === "boolean" ? extras.autoStartFocus : undefined,
+    soundEnabled: typeof extras.soundEnabled === "boolean" ? extras.soundEnabled : undefined,
+    soundVolume: typeof extras.soundVolume === "number" ? extras.soundVolume : undefined,
+    dailyGoalMinutes: typeof extras.dailyGoalMinutes === "number" ? extras.dailyGoalMinutes : undefined,
+    theme: extras.theme === "light" || extras.theme === "dark" ? extras.theme : undefined
+  });
+};
 
 const toRemoteSession = (userId: string, session: SessionRecord) => ({
   user_id: userId,
@@ -106,7 +138,19 @@ const applyMergedState = async (localState: PersistedState, settings: TimerSetti
   return nextState;
 };
 
+const requireClient = () => {
+  if (!supabase) {
+    throw new Error("Cloud sync is not configured.");
+  }
+
+  return supabase;
+};
+
 export const getAccountSnapshot = async (): Promise<AccountSnapshot> => {
+  if (!isSupabaseConfigured || !supabase) {
+    return { configured: false, user: null, session: null, profile: null };
+  }
+
   const {
     data: { session }
   } = await supabase.auth.getSession();
@@ -114,7 +158,7 @@ export const getAccountSnapshot = async (): Promise<AccountSnapshot> => {
   const user = session?.user ?? null;
 
   if (!user) {
-    return { user: null, session: null, profile: null };
+    return { configured: true, user: null, session: null, profile: null };
   }
 
   const { data: profile } = await supabase
@@ -123,11 +167,11 @@ export const getAccountSnapshot = async (): Promise<AccountSnapshot> => {
     .eq("id", user.id)
     .maybeSingle();
 
-  return { user, session, profile: profile ?? null };
+  return { configured: true, user, session, profile: profile ?? null };
 };
 
 export const signUpWithEmail = async (email: string, password: string, displayName: string) =>
-  supabase.auth.signUp({
+  requireClient().auth.signUp({
     email,
     password,
     options: {
@@ -138,15 +182,18 @@ export const signUpWithEmail = async (email: string, password: string, displayNa
   });
 
 export const signInWithEmail = async (email: string, password: string) =>
-  supabase.auth.signInWithPassword({
+  requireClient().auth.signInWithPassword({
     email,
     password
   });
 
-export const signOutAccount = async () => supabase.auth.signOut();
+export const requestPasswordReset = async (email: string) =>
+  requireClient().auth.resetPasswordForEmail(email);
+
+export const signOutAccount = async () => requireClient().auth.signOut();
 
 export const updateProfileName = async (userId: string, displayName: string) =>
-  supabase.from("profiles").upsert(
+  requireClient().from("profiles").upsert(
     {
       id: userId,
       display_name: displayName
@@ -154,16 +201,52 @@ export const updateProfileName = async (userId: string, displayName: string) =>
     { onConflict: "id" }
   );
 
+const upsertPreferences = async (userId: string, settings: TimerSettings) => {
+  const payload = {
+    user_id: userId,
+    focus_minutes: settings.focusMinutes,
+    break_minutes: settings.breakMinutes,
+    auto_start_breaks: settings.autoStartBreaks,
+    extras: extrasFromSettings(settings)
+  };
+
+  const withExtras = await requireClient().from("preferences").upsert(payload, { onConflict: "user_id" });
+
+  if (!withExtras.error) {
+    return withExtras;
+  }
+
+  const { extras: _extras, ...legacy } = payload;
+  return requireClient().from("preferences").upsert(legacy, { onConflict: "user_id" });
+};
+
 export const syncAccountState = async (user: User): Promise<PersistedState> => {
   const localState = await getState();
+  const client = requireClient();
 
-  const [{ data: preferences }, { data: remoteSessions }] = await Promise.all([
-    supabase
+  const loadPreferences = async () => {
+    const withExtras = await client
+      .from("preferences")
+      .select("focus_minutes, break_minutes, auto_start_breaks, extras")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (!withExtras.error) {
+      return withExtras.data;
+    }
+
+    const legacy = await client
       .from("preferences")
       .select("focus_minutes, break_minutes, auto_start_breaks")
       .eq("user_id", user.id)
-      .maybeSingle(),
-    supabase
+      .maybeSingle();
+
+    return legacy.data;
+  };
+
+  const [preferences, { data: remoteSessions }] = await Promise.all([
+    loadPreferences(),
+    client
       .from("sessions")
       .select("local_session_id, mode, duration_ms, completed_at")
       .eq("user_id", user.id)
@@ -175,17 +258,9 @@ export const syncAccountState = async (user: User): Promise<PersistedState> => {
   const mergedSessions = mergeSessions(localState.sessions, (remoteSessions ?? []) as RemoteSession[]);
 
   await Promise.all([
-    supabase.from("preferences").upsert(
-      {
-        user_id: user.id,
-        focus_minutes: mergedSettings.focusMinutes,
-        break_minutes: mergedSettings.breakMinutes,
-        auto_start_breaks: mergedSettings.autoStartBreaks
-      },
-      { onConflict: "user_id" }
-    ),
+    upsertPreferences(user.id, mergedSettings),
     mergedSessions.length > 0
-      ? supabase.from("sessions").upsert(mergedSessions.map((session) => toRemoteSession(user.id, session)), {
+      ? client.from("sessions").upsert(mergedSessions.map((session) => toRemoteSession(user.id, session)), {
           onConflict: "user_id,local_session_id"
         })
       : Promise.resolve()
@@ -195,15 +270,7 @@ export const syncAccountState = async (user: User): Promise<PersistedState> => {
 };
 
 export const syncSettingsToAccount = async (userId: string, settings: TimerSettings) => {
-  await supabase.from("preferences").upsert(
-    {
-      user_id: userId,
-      focus_minutes: settings.focusMinutes,
-      break_minutes: settings.breakMinutes,
-      auto_start_breaks: settings.autoStartBreaks
-    },
-    { onConflict: "user_id" }
-  );
+  await upsertPreferences(userId, settings);
 };
 
 export const syncSessionsToAccount = async (userId: string, sessions: SessionRecord[]) => {
@@ -211,7 +278,18 @@ export const syncSessionsToAccount = async (userId: string, sessions: SessionRec
     return;
   }
 
-  await supabase.from("sessions").upsert(sessions.map((session) => toRemoteSession(userId, session)), {
+  await requireClient().from("sessions").upsert(sessions.map((session) => toRemoteSession(userId, session)), {
     onConflict: "user_id,local_session_id"
   });
+};
+
+export const maybeSyncCompletedSessions = async (sessions: SessionRecord[]) => {
+  try {
+    const account = await getAccountSnapshot();
+    if (account.user) {
+      await syncSessionsToAccount(account.user.id, sessions);
+    }
+  } catch {
+    // keep the timer working even if sync is offline
+  }
 };
