@@ -1,24 +1,22 @@
 <p align="center">
-  <img src="docs/shots/banner.png" alt="Sukoon — a focus timer for Chrome" width="100%" />
+  <img src="docs/shots/banner.png" alt="Sukoon — a Pomodoro timer for Chrome" width="100%" />
 </p>
 
 # Sukoon
 
-**A focus timer for Chrome.** Focus sessions for deep work: you work a block, you rest a little, and after four rounds you take a longer pause. Pin it to the toolbar. The badge keeps the remaining minutes while you look away from the clock.
+**A Pomodoro timer for Chrome.** You work for 25 minutes, rest for 5, and after four sessions you take a longer break. Pin it on the toolbar. While it runs, the icon shows how much time you have left.
 
-*Sukoon* (سكون) is Arabic for stillness — said **soo-KOON**. The quiet you enter to work.
-
-The face matches the clock: clay, dust, dry stone.
+*Sukoon* (سكون) is Arabic for stillness — said **soo-KOON**.
 
 ![Using Sukoon](docs/demo.gif)
 
-This is a **Chrome extension**. It is not an iPhone app, not a Mac app, and it does not go through the Apple App Store. You publish it on the [Chrome Web Store](https://chrome.google.com/webstore) — Google’s store for extensions.
+This is a **Chrome extension**. It does not go on the Apple App Store or Google Play. To put it in front of other people, you upload it to the [Chrome Web Store](https://chrome.google.com/webstore).
 
 ---
 
-## Run it on your machine
+## Setup (use it on your computer)
 
-You need [Node.js](https://nodejs.org/) (18 or newer) and desktop Chrome.
+You need [Node.js](https://nodejs.org/) 18+ and the Chrome desktop browser.
 
 ```bash
 git clone https://github.com/shahjacobb/Forge-Extension.git
@@ -27,24 +25,21 @@ npm install
 npm run build
 ```
 
-Then load it:
+Then:
 
-1. Open `chrome://extensions`
-2. Turn **Developer mode** on (top right)
+1. In Chrome, open `chrome://extensions`
+2. Turn on **Developer mode** (top right)
 3. Click **Load unpacked**
-4. Choose the **`dist`** folder inside the repo — not the repo root, not `src`
+4. Select the **`dist`** folder (the one inside this repo, next to `package.json`)
 5. Pin **Sukoon** on the toolbar
 
-That is the whole local setup. After you change code: `npm run build`, then **Reload** on the extension card.
+If you change the code later: run `npm run build` again, then click **Reload** on the extension card.
 
-### Do not install it these ways
+### Do not do these
 
-- **GitHub → Code → Download ZIP.** That zip is the source repo (README, `src/`, configs). Chrome cannot load it as an extension, and the Chrome Web Store will reject it.
-- **A “Chrome extension downloader” / CRX extractor.** Those extensions scrape `.crx` files out of the store. They are the wrong tool for this project, they skip review, and they are a common malware vector. This repo is not installed that way.
-- **Dragging a zip onto `chrome://extensions`.** Chrome wants an **unpacked folder** (`dist/`) for local testing, or a zip you built with `npm run package` for the store dashboard — not a GitHub zip, not a CRX from a downloader.
-
-To try it: clone, `npm run build`, Load unpacked → `dist/`.
-To publish: `npm run package`, then upload **`sukoon.zip`** in the [Chrome Web Store dashboard](https://chrome.google.com/webstore/devconsole).
+- **GitHub → Code → Download ZIP.** That is the source code. Chrome will not treat it as an extension.
+- **A CRX / “Chrome extension downloader.”** Do not install this project that way.
+- **Dropping a zip onto `chrome://extensions`.** For local testing, load the **folder** `dist/`. For the public store, upload the zip from `npm run package` (see below).
 
 ---
 
@@ -115,54 +110,51 @@ Needs a `.env.local` with Supabase keys (see Development). Without keys, the tim
 
 ---
 
-## Publish to the Chrome Web Store
+## Put it on the Chrome Web Store
 
-The store for Chrome extensions is the **Chrome Web Store**, via the [Developer Dashboard](https://chrome.google.com/webstore/devconsole). That is not the Apple App Store, not Google Play, and not a “download the repo zip” flow.
+I cannot log into your Google account or pay Google’s fee from here. You upload it yourself. It takes one zip and the [Developer Dashboard](https://chrome.google.com/webstore/devconsole).
 
-### Make the zip (this is the file you upload)
+### 1. Make the zip
 
-From the project root, after you have Node installed:
+In the project folder:
 
 ```bash
 npm install
 npm run package
 ```
 
-That command builds the extension and writes **`sukoon.zip`** next to `package.json`. Upload **that** file.
+That creates **`sukoon.zip`** next to `package.json`. That file is what Google wants.
 
-What `sukoon.zip` is: the contents of `dist/` (manifest, HTML, scripts, icons).
-What it is not: GitHub **Code → Download ZIP**. That download is the repository. The store will reject it, or Chrome will not treat it as an extension.
+### 2. One-time account
 
-If you prefer to zip by hand:
+1. Open the [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole)
+2. Sign in with the Google account that should own the listing
+3. Pay the one-time registration fee if Google asks (it is a few dollars, once)
+4. If you turned on account sync, host a short privacy policy page and keep the URL. The form asks for it.
+
+### 3. Upload
+
+1. Dashboard → **New item** (first time) or your item → **Package** (updates)
+2. Upload `sukoon.zip` — not a GitHub zip
+3. Fill in:
+   - Name: Sukoon
+   - Summary: Pomodoro timer for Chrome. 25 minutes of work, 5 minutes of rest, a longer break after four sessions.
+   - Category: Productivity
+   - Screenshots: `docs/shots/timer.png`, `running.png`, `activity.png`, `month.png`, `settings.png`, `complete.png` (Google wants 1280×800 or 640×400 — scale them if the form complains)
+   - Small tile: `public/icon-128.png`
+   - Marquee: `docs/shots/banner.png`
+4. Privacy: single purpose; add `your-project.supabase.co` if sync is on; justify `storage`, `alarms`, `notifications`, `offscreen`
+5. Click **Submit for review**
+
+Google emails you when it is live or if they bounce it. Later updates: bump `version` in `public/manifest.json`, run `npm run package`, upload the new zip, submit again.
+
+If you would rather zip by hand:
 
 ```bash
 npm run build
 cd dist
 zip -r ../sukoon.zip .
 ```
-
-### One-time, as the publisher
-
-1. Pay the one-time [Chrome Web Store developer](https://chrome.google.com/webstore/devconsole) registration fee.
-2. If account sync is on, host a short privacy policy (email + session data via Supabase). The listing form asks for the URL.
-
-### Each release
-
-1. Bump `version` in `public/manifest.json` (it is `0.5.0` now).
-2. Run `npm run package`.
-3. Dashboard → **New item**, or the existing item → **Package**.
-4. Upload `sukoon.zip`.
-5. Listing copy:
-   - Name: Sukoon
-   - Summary: A focus timer for Chrome. Focus sessions for deep work, a short rest, a longer pause after four.
-   - Category: Productivity
-   - Screenshots: `docs/shots/timer.png`, `running.png`, `activity.png`, `month.png`, `settings.png`, `complete.png` (the store wants 1280×800 or 640×400 — scale these if the form rejects the raw popup size)
-   - Small tile: `public/icon-128.png`
-   - Marquee: `docs/shots/banner.png`
-6. Privacy: single purpose; remote host (`your-project.supabase.co` if sync is on); justify `storage`, `alarms`, `notifications`, `offscreen`.
-7. **Submit for review**. Google emails you when it is live or when they bounce it.
-
-Updates: bump `version`, `npm run package`, upload the new zip, submit again.
 
 ---
 
